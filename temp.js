@@ -59,11 +59,16 @@ console.log('Signature:', signature);
 
 
 
-const message = { "testdata": testData, "signature":signature};
+// // Function to encrypt the message
+// // Example: Encrypt the message using the recipient's public key
+// function encryptMessage(publicKey, message) {
+//     return crypto.publicEncrypt(publicKey, Buffer.from(message));
+// }
+// const encryptedMessage = encryptMessage(recipientPublicKey, "Hello, this is a secret message!");
+
 
 
 
 // Replace with your topicId and encrypted message
-sendEncryptedMessage("0.0.4842073", JSON.stringify(message));
-const g = JSON.stringify(message);
-console.log(message.testdata);
+sendEncryptedMessage("0.0.4842073", testData);
+sendEncryptedMessage("0.0.4842073", signature);
