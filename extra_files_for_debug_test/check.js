@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { signMessage, verifyMessage } = require('./cryptoutils');
+const { signMessage, verifyMessage } = require('../cryptoutils');
 
 // Load keys from environment variables
 const privateKeyDer = process.env.HEDERA_PRIVATE_KEY;
