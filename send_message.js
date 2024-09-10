@@ -3,7 +3,7 @@ const { Client, TopicMessageSubmitTransaction } = require("@hashgraph/sdk");
 require("dotenv").config();
 
 const client = Client.forTestnet();
-client.setOperator(process.env.HEDERA_ACCOUNT_ID, process.env.HEDERA_PRIVATE_KEY);
+client.setOperator(process.env["HEDERA_ACCOUNT_ID"], process.env["HEDERA_PRIVATE_KEY"]);
 
 async function sendEncryptedMessage(topicId, encryptedMessage) {
     const transaction = new TopicMessageSubmitTransaction({

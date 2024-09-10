@@ -4,7 +4,7 @@ require("dotenv").config();
 
 // Initialize Hedera client
 const client = Client.forTestnet();
-client.setOperator(process.env.HEDERA_ACCOUNT_ID2, process.env.HEDERA_PRIVATE_KEY2);
+client.setOperator(process.env["HEDERA_ACCOUNT_ID2"], process.env["HEDERA_PRIVATE_KEY2"]);
 
 /**
  * Subscribes to a Hedera topic and logs received messages.
