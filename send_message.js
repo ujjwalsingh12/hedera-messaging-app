@@ -19,6 +19,8 @@ async function sendEncryptedMessage(topicId, encryptedMessage) {
 
 
 
+
+
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
@@ -52,18 +54,40 @@ const publicKey = loadKeyFromFile(publicKeyPath);
 const privateKey = loadKeyFromFile(privateKeyPath, process.env.PRIVATE_KEY_PASSPHRASE);
 
 // Test signing and verification
-const testData = 'This is a secret message!';
-const signature = signDataWithPrivateKey(privateKey, testData);
-console.log('Signature:', signature);
+// const testData = 'sdafasf';
 
 
 
 
-const message = { "testdata": testData, "signature":signature};
+function send(testData){
+
+    const signature = signDataWithPrivateKey(privateKey, testData);
+    console.log('Signature:', signature);
+    const message = { "testdata": testData, "signature":signature};
+    sendEncryptedMessage("0.0.4842073", JSON.stringify(message));
+    const g = JSON.stringify(message);
+    console.log(message.testdata);
+
+}
+
+
+
 
 
 
 // Replace with your topicId and encrypted message
-sendEncryptedMessage("0.0.4842073", JSON.stringify(message));
-const g = JSON.stringify(message);
-console.log(message.testdata);
+// send_msg();
+
+const args = process.argv.slice(2); // Slice to skip the first two elements
+
+if (args.length === 0) {
+    console.log('No arguments provided.');
+} else {
+    console.log('Message is: ');
+    let s = "";
+    args.forEach((arg, index) => {
+        s = s + " " + arg;
+    });
+    testData = s.substring(1);
+    send(testData);
+}

@@ -47,8 +47,6 @@ function verifySignatureWithPublicKey(publicKey, data, signature) {
 
 
 
-
-
 const publicKey = loadKeyFromFile(publicKeyPath);
 
 
@@ -59,10 +57,15 @@ async function subscribeToTopic(topicId) {
         const subscriptionId = await new TopicMessageQuery()
             .setTopicId(topicId)
             .subscribe(client, (message) => {
+                // Convert it to a string if needed
+                const accountIdString = message.initialTransactionId.accountId.toString();
                 const messageContent = Buffer.from(message.contents).toString();
-                const jsonmessage = JSON.parse(messageContent);
-                console.log(`Received message: ${jsonmessage.testdata}`);
-                console.log(`Received message: ${jsonmessage.signature}`);
+                let jsonmessage = JSON.parse(messageContent);
+                jsonmessage['account_id'] = accountIdString;
+                // console.log(jsonmessage);
+                console.log(`Account ID: ${jsonmessage.account_id}`);
+                console.log(`Data:       ${jsonmessage.testdata}`);
+                console.log(`Signature:  ${jsonmessage.signature}`);
                 const isVerified = verifySignatureWithPublicKey(publicKey, jsonmessage.testdata, jsonmessage.signature);
                 console.log('Is the signature valid?', isVerified);
                 
