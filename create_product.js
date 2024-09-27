@@ -31,7 +31,7 @@ async function updateProduct(productId,centralTopic){
     console.log(`Following product added to topic: ${productId}`);
 }
 
-async function addProduct(centralTopic,account_num,Product_name){
+async function create_product(centralTopic,account_num,Product_name){
     
     client.setOperator(account[account_num].account_id, account[account_num].private_key);
     const topicId = await createProduct(Product_name);
@@ -39,21 +39,12 @@ async function addProduct(centralTopic,account_num,Product_name){
     console.log(centralTopic," will be updated with ",topicId.toString());
     updateProduct(topicId.toString(),centralTopic);
 }
-// Get the receipt
-// addProduct("0.0.4893302",0,"Apple");
+// const args = process.argv.slice(2); // Slice to skip the first two elements
+// if (args.length === 0) {
+//     addProduct("0.0.4893302",0,"Apple");
+// } else {
+//     addProduct(args[0],parseInt(args[1],10),args[2]);
+// }
 
-const args = process.argv.slice(2); // Slice to skip the first two elements
-
-if (args.length === 0) {
-    addProduct("0.0.4893302",0,"Apple");
-} else {
-    
-    // args.forEach((arg, index) => {
-    //     s = s + " " + arg;
-    // });
-    // testData = s.substring(1);
-    addProduct(args[0],parseInt(args[1],10),args[2]);
-}
-
-
+module.exports = {create_product};
 

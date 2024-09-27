@@ -5,9 +5,9 @@ const {
     AccountBalanceQuery,
     AccountCreateTransaction,
   } = require("@hashgraph/sdk");
-  require("dotenv").config();
   const accounts = require('./keys.json');
-  async function environmentSetup() {
+
+  async function create_account() {
     // Grab your Hedera testnet account ID and private key from your .env file
     const myAccountId = accounts[4].account_id;
     const myPrivateKey = accounts[4].private_key;
@@ -65,5 +65,10 @@ const {
   
     return newAccountId;
   }
-  environmentSetup();
+  
+  // create_account();
+
+  module.exports = {create_account};
+
+
   
