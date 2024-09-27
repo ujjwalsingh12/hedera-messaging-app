@@ -51,6 +51,8 @@ def list_node_scripts():
         '2': {'script': 'recv_message.js', 'args': ['']},
         '3': {'script': 'transfer_hbar.js', 'args': ['']},
         '4': {'script': 'test.js', 'args': []},
+        '5': {'script': 'create_product.js', 'args': []},
+        '6': {'script': 'read_messages.js', 'args': []},
         # '3': {'script': 'create_token.js', 'args': ['']},
         # Add more programs here
     }

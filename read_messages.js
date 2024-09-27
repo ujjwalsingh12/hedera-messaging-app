@@ -39,3 +39,12 @@ async function fetchTopicMessages(topicId) {
 // Replace with your topic ID
 const topicId = '0.0.4893302';
 fetchTopicMessages(topicId);
+
+const args = process.argv.slice(2); // Slice to skip the first two elements
+
+if (args.length === 0) {
+  fetchTopicMessages("0.0.4893302");
+} else {
+  fetchTopicMessages(args[0]);
+}
+
