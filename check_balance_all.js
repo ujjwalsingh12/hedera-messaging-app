@@ -15,8 +15,8 @@ async function check_balance_all() {
 
 module.exports = {check_balance_all};
 
-async function xx(params) {
-    console.log(await check_balance_all());
-}
+// async function xx(params) {
+//     console.log(await check_balance_all());
+// }
 
-xx();
+// xx();

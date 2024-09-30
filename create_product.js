@@ -41,6 +41,7 @@ async function create_product(centralTopic,account_num,Product_name){
     return topicId; //////////////////////////////////////////////////////////////////////////////////
     
 }
+module.exports = {create_product};
 // const args = process.argv.slice(2); // Slice to skip the first two elements
 // if (args.length === 0) {
 //     addProduct("0.0.4893302",0,"Apple");
@@ -48,5 +49,4 @@ async function create_product(centralTopic,account_num,Product_name){
 //     addProduct(args[0],parseInt(args[1],10),args[2]);
 // }
 
-module.exports = {create_product};
 
