@@ -1,7 +1,8 @@
-const { Client, TopicMessageSubmitTransaction } = require("@hashgraph/sdk");
+const { Client, TopicMessageSubmitTransaction,PrivateKey, AccountId, PublicKey } = require("@hashgraph/sdk");
 
 require("dotenv").config();
-
+const account = require('./keys.json');
+const { sign, Signature } = require("noble-ed25519");
 const client = Client.forTestnet();
 client.setOperator(process.env["HEDERA_ACCOUNT_ID"], process.env["HEDERA_PRIVATE_KEY"]);
 
@@ -18,55 +19,33 @@ async function sendEncryptedMessage(topicId, encryptedMessage) {
 }
 
 
-
-
-
-const crypto = require('crypto');
-const fs = require('fs');
-const path = require('path');
-
-
-
-// Load keys from files
-function loadKeyFromFile(filePath, passphrase) {
-    try {
-        return fs.readFileSync(filePath, 'utf8');
-    } catch (error) {
-        console.error(`Error loading key from ${filePath}:`, error);
-        throw error;
-    }
+async function signMessage(privateKey,mess) {
+    // Initialize the client
+    const client = Client.forTestnet(); // or forMainnet()
+    
+    
+    // Message to sign
+    const message = mess;
+    
+    // Sign the message
+    const signature = privateKey.sign(message);
+    // console.log(signature.hex());
+    // console.log("Signature: ", signature.toString());
+    return signature;
 }
 
 
-function signDataWithPrivateKey(privateKey, data) {
-    const sign = crypto.createSign('SHA256');
-    sign.update(data);
-    sign.end();
-    return sign.sign({
-        key: privateKey,
-        passphrase: 'your-passphrase' // Provide the passphrase here
-    }, 'base64');
-}
-
-const publicKeyPath = path.resolve(__dirname, 'publicKey.pem');
-const privateKeyPath = path.resolve(__dirname, 'privateKey.pem');
-const publicKey = loadKeyFromFile(publicKeyPath);
-const privateKey = loadKeyFromFile(privateKeyPath, process.env.PRIVATE_KEY_PASSPHRASE);
-
-// Test signing and verification
-// const testData = 'sdafasf';
-
-
-
-
-function send(testData){
-
-    const signature = signDataWithPrivateKey(privateKey, testData);
+async function send(testData){
+    const privateKey = PrivateKey.fromString(account[0].private_key);
+    const signature = await signMessage(privateKey, testData);
     console.log('Signature:', signature);
-    const message = { "testdata": testData, "signature":signature};
+    const message = { "testdata": testData, "signature":Buffer.from(signature).toString('hex')};
     sendEncryptedMessage("0.0.4842073", JSON.stringify(message));
-    const g = JSON.stringify(message);
-    console.log(message.testdata);
+    // const g = Buffer.from(signature).toString('hex');
+    // const pk = PublicKey.fromString("302d300706052b8104000a032200027c139a504d8b5f6fe3f706b1173320e8188fc6dff7925ca80db707de75204e3f");
+    // const isvalid = pk.verify(testData,Buffer.from(g,'hex'), 'hex');
+    // console.log(isvalid);
+    // console.log(g);
 
 }
 

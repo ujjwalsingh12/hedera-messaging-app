@@ -1,3 +1,4 @@
+
 const { Client, PrivateKey, AccountId, PublicKey } = require("@hashgraph/sdk");
 
 async function signMessage() {
@@ -11,18 +12,19 @@ async function signMessage() {
     const message = "Hello, Hedera!";
     
     // Sign the message
-    const signature = privateKey.sign(message);
+    let signature = privateKey.sign(message);
     
     console.log("Signature: ", signature.toString());
+    signature = Buffer.from(signature).toString('hex');
     return { message, signature };
 }
 
 // signMessage();
 async function verifySignature(message, signature) {
     const publicKey = PublicKey.fromString("302d300706052b8104000a032200027c139a504d8b5f6fe3f706b1173320e8188fc6dff7925ca80db707de75204e3f");
-    
+    const g = Buffer.from(signature, 'hex');
     // Verify the signature
-    const isValid = publicKey.verify(message, signature);
+    const isValid = publicKey.verify(message, g);
     
     console.log("Is the signature valid? ", isValid);
 }

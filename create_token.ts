@@ -2,22 +2,24 @@ const { Client, PrivateKey, TokenCreateTransaction, TokenType, TokenSupplyType, 
 
 // Your Hedera account ID and private key
 require("dotenv").config();
+const account = require('./keys.json');
+
 
 // Initialize Hedera client
 const client = Client.forTestnet(); // Use Client.forMainnet() for mainnet
-client.setOperator(process.env["HEDERA_ACCOUNT_ID"], process.env["HEDERA_PRIVATE_KEY2]);
 
-async function createToken() {
+async function create_token(account_num,token_name,tresury_id,hbar) {
+    client.setOperator(account[account_num].account_id, account[account_num].private_key);
     // Define the token creation transaction
     const tokenCreateTx = new TokenCreateTransaction()
-        .setTokenName("My Token")
-        .setTokenSymbol("MTK")
+        .setTokenName(token_name)
+        .setTokenSymbol("REW")
         .setTokenType(TokenType.FungibleCommon) // Choose TokenType.FungibleCommon or TokenType.NonFungibleUnique
         .setSupplyType(TokenSupplyType.Infinite) // Choose TokenSupplyType.Infinite or TokenSupplyType.Finite
         .setInitialSupply(10) // Set initial supply if supply type is finite
-        .setTreasuryAccountId(process.env["HEDERA_ACCOUNT_ID"]) // The account that will hold the token
+        .setTreasuryAccountId(tresury_id) // The account that will hold the token
         .setAdminKey(client.publicKey) // Admin key to manage the token
-        .setMaxTransactionFee(new Hbar(18)); // Set the max transaction fee
+        .setMaxTransactionFee(new Hbar(hbar)); // Set the max transaction fee
 
 
         // const estimatedFee = await tokenCreateTx.getCost(client);
@@ -32,8 +34,9 @@ async function createToken() {
     // Get the token ID
     const tokenId = receipt.tokenId;
     console.log(`Token created with ID: ${tokenId.toString()}`);
+    return tokenId;
 }
 
-createToken().catch(console.error);
+// createToken(0,).catch(console.error);
 
-// module.exports = { createToken};
+module.exports = {create_token};

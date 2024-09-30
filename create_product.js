@@ -38,6 +38,8 @@ async function create_product(centralTopic,account_num,Product_name){
     // console.log(topicId); 
     console.log(centralTopic," will be updated with ",topicId.toString());
     updateProduct(topicId.toString(),centralTopic);
+    return topicId; //////////////////////////////////////////////////////////////////////////////////
+    
 }
 // const args = process.argv.slice(2); // Slice to skip the first two elements
 // if (args.length === 0) {
