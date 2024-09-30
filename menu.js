@@ -14,7 +14,8 @@ const menuOptions = {
     1: 'Create Product',
     2: 'Check Balance',
     3: 'Check Balance for All Accounts',
-    4: 'Create Token'
+    4: 'Create Token',
+    5: 'Exit'
 };
 
 // Function to display the menu
@@ -23,47 +24,38 @@ function displayMenu() {
     Object.keys(menuOptions).forEach(option => {
         console.log(`${option}: ${menuOptions[option]}`);
     });
-    console.log('5: Exit');
 }
 
-// Function to handle user input and execute the corresponding function
-async function handleInput(choice) {
+// Function to handle user input and call corresponding function
+async function handleInput(choice, credentials) {
     switch (choice) {
         case '1': // Create Product
             rl.question('Enter Central Topic: ', async (centralTopic) => {
-                rl.question('Enter Account Number: ', async (accountNum) => {
-                    rl.question('Enter Product Name: ', async (productName) => {
-                        await create_product(centralTopic, accountNum, productName);
-                        promptUser();
-                    });
+                rl.question('Enter Product Name: ', async (productName) => {
+                    await create_product(centralTopic, credentials.account_id, productName);
+                    promptUser(credentials);
                 });
             });
             break;
 
         case '2': // Check Balance for a Specific Account
-            rl.question('Enter Account ID: ', async (acId) => {
-                rl.question('Enter Private Key: ', async (privKey) => {
-                    const balance = await check_balance(acId, privKey);
-                    console.log(`Balance: ${balance}`);
-                    promptUser();
-                });
-            });
+            const balance = await check_balance(credentials.account_id, credentials.private_key);
+            console.log(`Balance: ${balance}`);
+            promptUser(credentials);
             break;
 
         case '3': // Check Balance for All Accounts
             const balances = await check_balance_all();
             console.log(balances);
-            promptUser();
+            promptUser(credentials);
             break;
 
         case '4': // Create Token
-            rl.question('Enter Account Number: ', async (accountNum) => {
-                rl.question('Enter Token Name: ', async (tokenName) => {
-                    rl.question('Enter Treasury Account ID: ', async (tresuryId) => {
-                        rl.question('Enter Hbar Fee: ', async (hbar) => {
-                            await create_token(accountNum, tokenName, tresuryId, hbar);
-                            promptUser();
-                        });
+            rl.question('Enter Token Name: ', async (tokenName) => {
+                rl.question('Enter Treasury Account ID: ', async (tresuryId) => {
+                    rl.question('Enter Hbar Fee: ', async (hbar) => {
+                        await create_token(credentials.account_id, tokenName, tresuryId, hbar);
+                        promptUser(credentials);
                     });
                 });
             });
@@ -76,18 +68,22 @@ async function handleInput(choice) {
 
         default:
             console.log('Invalid choice. Please try again.');
-            promptUser();
+            promptUser(credentials);
             break;
     }
 }
 
-// Function to prompt user input
-function promptUser() {
+// Function to prompt user for input
+function promptUser(credentials) {
     displayMenu();
     rl.question('Enter your choice: ', (choice) => {
-        handleInput(choice);
+        handleInput(choice, credentials);
     });
 }
 
-// Start the program
-promptUser();
+// Show the menu and pass credentials
+function showMenu(credentials) {
+    promptUser(credentials);
+}
+
+module.exports = { showMenu };

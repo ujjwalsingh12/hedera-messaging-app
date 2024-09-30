@@ -1,5 +1,5 @@
-const { showMenu } = require('./modules/menu');
-const { login } = require('./modules/login');
+const { showMenu } = require('./menu');
+const { login } = require('./login');
 
 async function main() {
     console.log("Welcome to the Hedera Application!");
