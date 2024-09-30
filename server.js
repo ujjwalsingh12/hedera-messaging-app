@@ -7,7 +7,9 @@ const { create_product } = require('./create_product');
 const { check_balance } = require('./check_balance');
 const { check_balance_all } = require('./check_balance_all');
 const { create_token } = require('./create_token.ts');
+const fs = require('fs');
 
+// Read keys from keys.json
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
@@ -15,7 +17,13 @@ const io = socketIO(server);
 // Serve static files
 app.use(express.static('public'));
 
+const keys = JSON.parse(fs.readFileSync('keys.json', 'utf8'));
 let credentials = {};
+
+// Helper function to format JSON into a table-like structure
+function formatJSONForTable(data) {
+    return JSON.stringify(data, null, 4); // Indent with 4 spaces for better readability
+}
 
 // Handle socket connection
 io.on('connection', (socket) => {
@@ -25,40 +33,61 @@ io.on('connection', (socket) => {
     socket.on('command', async (data) => {
         const [command, ...args] = data.split(' ');
 
-        switch (command) {
-            case 'login':
-                credentials.account_id = args[0];
-                credentials.private_key = args[1];
-                socket.emit('output', `Logged in with account ID: ${credentials.account_id}`);
-                break;
+        try {
+            switch (command) {
+                case 'login':
+                    const accountSerial = parseInt(args[0], 10); // Convert the argument to an integer
+                    if (!keys[accountSerial]) {
+                        socket.emit('login', `Invalid account number: ${accountSerial}`);
+                        break;
+                    }
+                
+                    // Fetch the account ID and private key from keys.json
+                    credentials.account_id = keys[accountSerial].account_id;
+                    credentials.private_key = keys[accountSerial].private_key;
+                
+                    socket.emit('login', `Logged in with account ID: ${credentials.account_id}`);
+                    break;
 
-            case 'create_product':
-                const topic = await create_product(args[0], credentials.account_id, args[1]);
-                socket.emit('output', `Product created with topic: ${topic}`);
-                break;
+                case 'logout':
+                    socket.emit('logout');
+                    break;
 
-            case 'check_balance':
-                const balance = await check_balance(credentials.account_id, credentials.private_key);
-                socket.emit('output', `Balance: ${balance}`);
-                break;
+                case 'create_product':
+                    const topic = await create_product(args[0], credentials.account_id, args[1]);
+                    socket.emit('output', `Product created with topic: ${topic}`);
+                    break;
 
-            case 'check_balance_all':
-                const allBalances = await check_balance_all();
-                socket.emit('output', `All balances: ${JSON.stringify(allBalances)}`);
-                break;
+                case 'check_balance':
+                    const balance = await check_balance(credentials.account_id, credentials.private_key);
+                    socket.emit('output', `Balance:\n${formatJSONForTable(balance)}`);
+                    break;
 
-            case 'create_token':
-                const tokenId = await create_token(credentials.account_id, args[0], args[1], args[2]);
-                socket.emit('output', `Token created with ID: ${tokenId}`);
-                break;
+                case 'check_balance_all':
+                    const allBalances = await check_balance_all();
+                    socket.emit('output', `All balances:\n${formatJSONForTable(allBalances)}`);
+                    break;
 
-            case 'help':
-                socket.emit('output', 'Available commands: login, create_product, check_balance, check_balance_all, create_token');
-                break;
+                case 'create_token':
+                    const tokenId = await create_token(credentials.account_id, args[0], args[1], args[2]);
+                    socket.emit('output', `Token created with ID: ${tokenId}`);
+                    break;
 
-            default:
-                socket.emit('output', 'Invalid command. Type "help" for a list of commands.');
-                break;
+                case 'help':
+                    socket.emit('output', 'Available commands: login, create_product, check_balance, check_balance_all, create_token, clear');
+                    break;
+                
+                case 'clear':
+                    // console.clear(); // Clear the server-side console
+                    socket.emit('clear'); // Tell the client to clear the screen
+                    break;
+
+                default:
+                    socket.emit('output', 'Invalid command. Type "help" for a list of commands.');
+                    break;
+            }
+        } catch (error) {
+            socket.emit('output', `Error executing command: ${error.message}`);
         }
     });
 
@@ -68,7 +97,7 @@ io.on('connection', (socket) => {
 });
 
 // Start the server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
