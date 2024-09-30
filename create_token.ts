@@ -2,14 +2,14 @@ const { Client, PrivateKey, TokenCreateTransaction, TokenType, TokenSupplyType, 
 
 // Your Hedera account ID and private key
 require("dotenv").config();
-const account = require('./keys.json');
+const account = require('./keys_dict.json');
 
 
 // Initialize Hedera client
 const client = Client.forTestnet(); // Use Client.forMainnet() for mainnet
 
-async function create_token(account_num,token_name,tresury_id,hbar) {
-    client.setOperator(account[account_num].account_id, account[account_num].private_key);
+async function create_token(account_id,token_name,tresury_id,hbar) {
+    client.setOperator(account_id, account[account_id].private_key);
     // Define the token creation transaction
     const tokenCreateTx = new TokenCreateTransaction()
         .setTokenName(token_name)

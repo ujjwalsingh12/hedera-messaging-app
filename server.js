@@ -19,6 +19,10 @@ app.use(express.static('public'));
 
 const keys = JSON.parse(fs.readFileSync('keys.json', 'utf8'));
 let credentials = {};
+let tresury = 4;
+let tresury_credentials = {"account_id":keys[tresury].account_id};
+const centralTopic = "0.0.4893302";
+let accountSN = 0;
 
 // Helper function to format JSON into a table-like structure
 function formatJSONForTable(data) {
@@ -43,6 +47,7 @@ io.on('connection', (socket) => {
                     }
                 
                     // Fetch the account ID and private key from keys.json
+                    accountSN = accountSerial;
                     credentials.account_id = keys[accountSerial].account_id;
                     credentials.private_key = keys[accountSerial].private_key;
                 
@@ -54,7 +59,7 @@ io.on('connection', (socket) => {
                     break;
 
                 case 'create_product':
-                    const topic = await create_product(args[0], credentials.account_id, args[1]);
+                    const topic = await create_product(centralTopic, accountSN, args[1]);
                     socket.emit('output', `Product created with topic: ${topic}`);
                     break;
 
@@ -69,12 +74,22 @@ io.on('connection', (socket) => {
                     break;
 
                 case 'create_token':
-                    const tokenId = await create_token(credentials.account_id, args[0], args[1], args[2]);
+                    const tokenId = await create_token(credentials.account_id, args[0], credentials.account_id, args[1]);
                     socket.emit('output', `Token created with ID: ${tokenId}`);
                     break;
+                
+                    
 
                 case 'help':
-                    socket.emit('output', 'Available commands: login, create_product, check_balance, check_balance_all, create_token, clear');
+                    socket.emit('output', 
+                        ```
+                        Available commands: 
+                        login <serial num>, 
+                        create_product <product name>, 
+                        check_balance, 
+                        check_balance_all, 
+                        create_token <name> <hbar>, 
+                        clear```);
                     break;
                 
                 case 'clear':
