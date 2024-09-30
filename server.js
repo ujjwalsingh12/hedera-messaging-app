@@ -60,12 +60,12 @@ io.on('connection', (socket) => {
 
                 case 'check_balance':
                     const balance = await check_balance(credentials.account_id, credentials.private_key);
-                    socket.emit('output', `Balance:\n${formatJSONForTable(balance)}`);
+                    socket.emit('balance', `${formatJSONForTable(balance)}`);
                     break;
 
                 case 'check_balance_all':
                     const allBalances = await check_balance_all();
-                    socket.emit('output', `All balances:\n${formatJSONForTable(allBalances)}`);
+                    socket.emit('balanceall', `${formatJSONForTable(allBalances)}`);
                     break;
 
                 case 'create_token':
