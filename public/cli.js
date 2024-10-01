@@ -199,7 +199,7 @@ function displayProducts(data) {
     const headerRow = document.createElement('tr');
 
     // Create headers
-    const headers = ['Topic ID', 'Metadata'];
+    const headers = ['Topic ID', 'Products'];
     headers.forEach(headerText => {
         const header = document.createElement('th');
         header.textContent = headerText;

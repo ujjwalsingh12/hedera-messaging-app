@@ -12,6 +12,8 @@ const { fetch_messages } = require('./fetch_messages'); // Import the new module
 const { fetch_topic_metadata } = require('./fetch_topic_metadata'); // Import the new module
 const { send_message } = require('./send_message');
 const { transferTokens } = require('./transfer_token');
+const { transfer_hbar } = require('./transfer_hbar');
+
 
 const app = express();
 const server = http.createServer(app);
@@ -24,7 +26,7 @@ const keys = JSON.parse(fs.readFileSync('keys.json', 'utf8'));
 let credentials = {};
 let treasury = 4;
 let treasury_credentials = { "account_id": keys[treasury].account_id };
-const centralTopic = "0.0.4893302";
+const centralTopic = "0.0.4930698";
 const producttopic = "0.0.4893302";
 
 let accountSN = 0;
@@ -70,8 +72,13 @@ io.on('connection', (socket) => {
                     break;
 
                 case 'create_product':
-                    const topic = await create_product(centralTopic, accountSN, args.slice(1).join(' '));
+                    const product_name = args.join(' ');
+                    const hbar_to_create = "20";
+                    console.log(product_name);
+                    const topic = await create_product(centralTopic, accountSN, product_name);
                     socket.emit('output', `Product created with topic: ${topic}`);
+                    const tokenIdx = await create_token(credentials.account_id, product_name, credentials.account_id, hbar_to_create);
+                    socket.emit('output', `Token created with ID: ${tokenIdx}`);
                     break;
 
                 case 'check_balance':
@@ -93,6 +100,19 @@ io.on('connection', (socket) => {
                     console.log(transfer,Number(args[2]));
                     // console.log(`${credentials.account_id},${credentials.private_key},${args[1]},${args[2]},${args[3]}`);
                     socket.emit('output',transfer);
+                    break;
+
+                case 'buy_product':
+                    const transferb = await transferTokens(keys[0].account_id,keys[0].private_key,args[0],credentials.account_id,parseInt(args[1]));
+                    console.log(transferb,Number(args[1]));
+                    // console.log(`${credentials.account_id},${credentials.private_key},${args[0]},${args[1]}`);
+                    socket.emit('output',transferb);
+                    break;
+                case 'transfer_hbar':
+                    const transferh = await transfer_hbar(JSON.stringify(credentials),args[1],parseInt(args[2]));
+                    // console.log(transferh,Number(args[2]));
+                    // console.log(`${credentials},${args[1]},${args[2]}`);
+                    socket.emit('output',transferh);
                     break;
 
                 case 'fetch_products':
@@ -135,6 +155,7 @@ io.on('connection', (socket) => {
                     8: fetch_products
                     9: fetch_messages -topicId-
                     10: transfer_token -tokenid- -receipeintId- -numberOfTokens-
+                    11: buy_product -tokenid- -numberofTokens-
                     clear
                     `);
                     break;

@@ -30,7 +30,7 @@ async function transferTokens(operatorId,pk,tokenId,recipientAccountId,amount) {
 
         // Get the receipt of the transaction
         const receipt = await txResponse.getReceipt(client);
-
+        console.log(receipt);
         // Log the transaction status
         resp = `Transaction Status: ${receipt.status.toString()}`;
     } catch (error) {

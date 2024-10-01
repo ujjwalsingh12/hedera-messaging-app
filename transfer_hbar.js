@@ -1,7 +1,7 @@
 const { Client, AccountId, PrivateKey, TransferTransaction, Hbar } = require('@hashgraph/sdk');
 
 require("dotenv").config();
-async function transferHbar(sender,receiver,amount) {
+async function transfer_hbar(sender,receiver_acid,amount) {
 
 
     let jsonString = sender;
@@ -23,25 +23,26 @@ async function transferHbar(sender,receiver,amount) {
         console.log('Sender Private Key:', privateKey);
     }
 
-    jsonString = receiver;
-    let receiverObject;
+    // jsonString = receiver_acid;
+    // let receiverObject;
     // Convert string to JSON
-    try {
-        receiverObject = JSON.parse(jsonString);
-    } catch (error) {
-        console.error('Error parsing JSON:', error.message);
-    }
-    
-    // Extract specific keys from JSON
-    if (receiverObject) {
-        const accountId = receiverObject.account_id;
-        console.log('Receiver Account ID:', accountId);
-    }
-
-    
-
-
-
+    // try {
+        //     receiverObject = JSON.parse(jsonString);
+        // } catch (error) {
+            //     console.error('Error parsing JSON:', error.message);
+            // }
+            
+            // Extract specific keys from JSON
+            // if (receiverObject) {
+            //         const accountId = receiverObject.account_id;
+            //         console.log('Receiver Account ID:', accountId);
+            //     }
+                
+                
+            
+            
+    const accountId = receiver_acid;
+    let resp = "";
 
 
     // Configure your Hedera client
@@ -50,7 +51,7 @@ async function transferHbar(sender,receiver,amount) {
 
     // Define the sender and receiver account IDs
     const senderAccountId = senderObject.account_id;
-    const receiverAccountId = receiverObject.account_id;
+    const receiverAccountId = receiver_acid;
 
     // Create the transaction
     const transaction = new TransferTransaction()
@@ -62,10 +63,11 @@ async function transferHbar(sender,receiver,amount) {
     try {
         const response = await transaction.execute(client);
         const receipt = await response.getReceipt(client);
-        console.log(`Transaction status: ${receipt.status.toString()}`);
+        resp = `Transaction status: ${receipt.status.toString()}`;
     } catch (error) {
-        console.error('Error executing transaction:', error);
+        resp = `Error executing transaction:${error}`;
     }
+    return resp;
 }
 
 
@@ -78,5 +80,5 @@ const accounts = require('./keys.json');
 const ss = JSON.stringify(accounts[4]);
 const sd = JSON.stringify(accounts[0]);
 const amount = 70;
-transferHbar(ss,sd,amount);
-// module.exports {transferHbar };
+// transferHbar(ss,sd,amount);
+module.exports = {transfer_hbar };
