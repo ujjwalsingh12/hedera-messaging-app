@@ -67,6 +67,12 @@ socket.on('products', (data) => {
     outputElement.scrollTop = outputElement.scrollHeight; // Auto scroll to the bottom
 });
 
+socket.on('messages', (data) => {
+    // Check if the data is a balance object
+    displayMessages(data);
+    outputElement.scrollTop = outputElement.scrollHeight; // Auto scroll to the bottom
+});
+
 
 
 
@@ -206,6 +212,41 @@ function displayProducts(data) {
         const productRow = document.createElement('tr');
         productRow.innerHTML = `<td>${product.topicId}</td><td>${product.metadata}</td>`;
         table.appendChild(productRow);
+    });
+
+    // Append the table to the output div
+    outputDiv.appendChild(table);
+}
+
+
+
+function displayMessages(datas) {
+    // Parse the incoming data (assuming it is a JSON array of strings)
+    const data = JSON.parse(datas);
+    const testDataArray = data.map(item => JSON.parse(item));
+    console.log(testDataArray);
+
+    const outputDiv = document.getElementById('output');
+    outputDiv.innerHTML = ''; // Clear previous output
+
+    // Create a table
+    const table = document.createElement('table');
+    const headerRow = document.createElement('tr');
+
+    // Create headers
+    const headers = ['Message', 'Signature'];
+    headers.forEach(headerText => {
+        const header = document.createElement('th');
+        header.textContent = headerText;
+        headerRow.appendChild(header);
+    });
+    table.appendChild(headerRow);
+
+    // Add test data and signatures to the table
+    testDataArray.forEach(item => {
+        const dataRow = document.createElement('tr');
+        dataRow.innerHTML = `<td>${item.testdata}</td><td>${item.signature}</td>`;
+        table.appendChild(dataRow);
     });
 
     // Append the table to the output div

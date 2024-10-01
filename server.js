@@ -62,13 +62,14 @@ io.on('connection', (socket) => {
                     break;
 
                 case 'send_message':
-                    const [topicToSend, messageContent] = args; // Get message and topic from args
+                    const topicToSend = args[0];
+                    const messageContent = args.slice(1).join(' '); // Get message and topic from args
                     const response = await send_message(messageContent, accountSN, topicToSend);
                     socket.emit('output', response);
                     break;
 
                 case 'create_product':
-                    const topic = await create_product(centralTopic, accountSN, args[1]);
+                    const topic = await create_product(centralTopic, accountSN, args.slice(1).join(' '));
                     socket.emit('output', `Product created with topic: ${topic}`);
                     break;
 
@@ -87,7 +88,7 @@ io.on('connection', (socket) => {
                     socket.emit('output', `Token created with ID: ${tokenId}`);
                     break;
 
-                case 'fetch_messages':
+                case 'fetch_products':
                     const topicId = centralTopic; // Get the topicId from the arguments
                     // const messagesList = await fetch_messages(accountSN,topicId); // Call the fetch_messages function
                     await fetch_messages(accountSN,topicId, 10000).then((messages) => {
@@ -104,6 +105,15 @@ io.on('connection', (socket) => {
                     });
                     break;
 
+                    case 'fetch_messages':
+                        const topicId2 = args[0]; // Get the topicId from the arguments
+                        await fetch_messages(accountSN,topicId2, 10000).then((messages) => {
+                            socket.emit('messages', messages); // Send messages back to the client
+                        }).catch((error) => {
+                            socket.emit('output', error); // Send messages back to the client
+                        });
+                        break;
+
 
                 case 'help':
                     socket.emit('output', 
@@ -114,6 +124,7 @@ io.on('connection', (socket) => {
                         send_message <topicId> <message>,  
                         check_balance_all, 
                         create_token <name> <hbar>, 
+                        fetch_products, 
                         fetch_messages <topicId>, 
                         clear`);
                     break;

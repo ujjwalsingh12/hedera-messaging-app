@@ -1,6 +1,7 @@
 // Example in JavaScript using Hedera SDK
 const { Client, TopicCreateTransaction, TopicMessageQuery, TopicMessageSubmitTransaction } = require("@hashgraph/sdk");
 const account = require('./keys.json');
+const {fetch_topic_metadata} = require('./fetch_topic_metadata');
 
 // Create a client instance
 const client = Client.forTestnet(); // or Client.forMainnet() for the mainnet
@@ -10,7 +11,7 @@ const client = Client.forTestnet(); // or Client.forMainnet() for the mainnet
 
 async function createProduct(Product_name) {
     const transaction = new TopicCreateTransaction()
-    .setTopicMemo(`This is a product by ${client.account_id} with name : ${Product_name}`);
+    .setTopicMemo(`${Product_name}`);
     const receipt = await (await transaction.execute(client)).getReceipt(client);
     const topicId = receipt.topicId;
     console.log(`${Product_name} created with ID: ${topicId}`);
@@ -27,8 +28,8 @@ async function updateProduct(productId,centralTopic){
     });
     const response = await transaction.execute(client);
     const receipt = await response.getReceipt(client);
-    
-    console.log(`Following product added to topic: ${productId}`);
+    const pro = await fetch_topic_metadata(0, productId); 
+    console.log(`${pro} product added to topic: ${productId}`);
 }
 
 async function create_product(centralTopic,account_num,Product_name){
@@ -44,9 +45,9 @@ async function create_product(centralTopic,account_num,Product_name){
 module.exports = {create_product};
 // const args = process.argv.slice(2); // Slice to skip the first two elements
 // if (args.length === 0) {
-//     addProduct("0.0.4893302",0,"Apple");
+    // create_product("0.0.4893302",0,"Apple");
 // } else {
-//     addProduct(args[0],parseInt(args[1],10),args[2]);
+    // addProduct(args[0],parseInt(args[1],10),args[2]);
 // }
 
 
