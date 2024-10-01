@@ -39,18 +39,18 @@ const axios = require('axios');
 // Replace with the URL of the API you want to call
 
 
-async function fetchData(topicId) {
+async function query_topic(topicId) {
     const apiUrl = `https://testnet.mirrornode.hedera.com/api/v1/topics/${topicId}/messages`;
     try {
         const response = await axios.get(apiUrl);
-        // console.log('Data:', response.data);
-        return response.data;
+        console.log('Data:', response.data);
+        return JSON.stringify(response.data);
     } catch (error) {
         console.error('Error fetching data:', error);
         return null;
     }
 }
 
-module.exports = {fetchData};
+module.exports = {query_topic};
 
-// fetchData('0.0.4842073');
+query_topic('0.0.4893302');

@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-async function fetchTopicMessages(topicId) {
+async function read_messages(topicId) {
   try {
     const url = `https://testnet.mirrornode.hedera.com/api/v1/topics/${topicId}/messages`;
     const response = await axios.get(url);
@@ -28,8 +28,10 @@ async function fetchTopicMessages(topicId) {
         // console.log('Running Hash Version:', message.running_hash_version);
         console.log('-------------------');
       });
+      return JSON.stringify(messages);
     } else {
       console.log('No messages found for this topic.');
+      return {};
     }
   } catch (error) {
     console.error('Error fetching topic messages:', error);
@@ -37,14 +39,15 @@ async function fetchTopicMessages(topicId) {
 }
 
 // Replace with your topic ID
-const topicId = '0.0.4893302';
-fetchTopicMessages(topicId);
+// const topicId = '0.0.4893302';
+// read_messages(topicId);
 
-const args = process.argv.slice(2); // Slice to skip the first two elements
+// const args = process.argv.slice(2); // Slice to skip the first two elements
 
-if (args.length === 0) {
-  fetchTopicMessages("0.0.4893302");
-} else {
-  fetchTopicMessages(args[0]);
-}
+// if (args.length === 0) {
+//   read_messages("0.0.4893302");
+// } else {
+//   read_messages(args[0]);
+// }
 
+module.exports = {read_messages};

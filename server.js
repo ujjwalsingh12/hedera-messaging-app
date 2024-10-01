@@ -1,15 +1,16 @@
 const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
+const fs = require('fs');
 
 // Import your functions
 const { create_product } = require('./create_product');
 const { check_balance } = require('./check_balance');
 const { check_balance_all } = require('./check_balance_all');
-const { create_token } = require('./create_token.ts');
-const fs = require('fs');
+const { create_token } = require('./create_token');
+const { fetch_messages } = require('./fetch_messages'); // Import the new module
+const { fetch_topic_metadata } = require('./fetch_topic_metadata'); // Import the new module
 
-// Read keys from keys.json
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
@@ -19,9 +20,11 @@ app.use(express.static('public'));
 
 const keys = JSON.parse(fs.readFileSync('keys.json', 'utf8'));
 let credentials = {};
-let tresury = 4;
-let tresury_credentials = {"account_id":keys[tresury].account_id};
+let treasury = 4;
+let treasury_credentials = { "account_id": keys[treasury].account_id };
 const centralTopic = "0.0.4893302";
+const producttopic = "0.0.4893302";
+
 let accountSN = 0;
 
 // Helper function to format JSON into a table-like structure
@@ -40,17 +43,16 @@ io.on('connection', (socket) => {
         try {
             switch (command) {
                 case 'login':
-                    const accountSerial = parseInt(args[0], 10); // Convert the argument to an integer
+                    const accountSerial = parseInt(args[0], 10);
                     if (!keys[accountSerial]) {
                         socket.emit('login', `Invalid account number: ${accountSerial}`);
                         break;
                     }
                 
-                    // Fetch the account ID and private key from keys.json
                     accountSN = accountSerial;
                     credentials.account_id = keys[accountSerial].account_id;
                     credentials.private_key = keys[accountSerial].private_key;
-                
+
                     socket.emit('login', `Logged in with account ID: ${credentials.account_id}`);
                     break;
 
@@ -77,23 +79,37 @@ io.on('connection', (socket) => {
                     const tokenId = await create_token(credentials.account_id, args[0], credentials.account_id, args[1]);
                     socket.emit('output', `Token created with ID: ${tokenId}`);
                     break;
-                
-                    
+
+                case 'fetch_messages':
+                    const topicId = centralTopic; // Get the topicId from the arguments
+                    // const messagesList = await fetch_messages(accountSN,topicId); // Call the fetch_messages function
+                    await fetch_messages(accountSN,topicId, 10000).then((messages) => {
+                        
+                        get_metadata(accountSN,messages).then((names)=>{
+                            socket.emit('products',names);
+                        });
+                        
+                        // console.log(names);
+                        // socket.emit('output', names); // Send messages back to the client
+                    }).catch((error) => {
+                        socket.emit('output', error); // Send messages back to the client
+                        // console.error("Error fetching messages:", error);
+                    });
+                    break;
 
                 case 'help':
                     socket.emit('output', 
-                        ```
-                        Available commands: 
+                        `Available commands: 
                         login <serial num>, 
                         create_product <product name>, 
                         check_balance, 
                         check_balance_all, 
                         create_token <name> <hbar>, 
-                        clear```);
+                        fetch_messages <topicId>, 
+                        clear`);
                     break;
-                
+
                 case 'clear':
-                    // console.clear(); // Clear the server-side console
                     socket.emit('clear'); // Tell the client to clear the screen
                     break;
 
@@ -116,3 +132,21 @@ const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+
+
+
+async function get_metadata(account_num,topic_idss) {
+    let metadataList = [];
+    const topic_ids = JSON.parse(topic_idss);
+    for (const topicId of topic_ids) {
+        try {
+            const metadata = await fetch_topic_metadata(account_num, topicId);
+            metadataList.push({ topicId, metadata });
+        } catch (error) {
+            console.error(`Error fetching metadata for topic ${topicId}: ${error.message}`);
+            metadataList.push({ topicId, error: error.message });
+        }
+    }
+
+    return JSON.stringify(metadataList);
+}

@@ -22,7 +22,8 @@ async function send(params) {
 }
 async function get(params) {
     new TopicMessageQuery()
-        .setTopicId("0.0.4893302")
+        // .setTopicId("0.0.4893302")
+        .setTopicId("0.0.4842073")
         .setStartTime(0)
         .subscribe(
             client,

@@ -61,6 +61,12 @@ socket.on('balanceall', (data) => {
     outputElement.scrollTop = outputElement.scrollHeight; // Auto scroll to the bottom
 });
 
+socket.on('products', (data) => {
+    // Check if the data is a balance object
+    displayProducts(data);
+    outputElement.scrollTop = outputElement.scrollHeight; // Auto scroll to the bottom
+});
+
 //----------------------------------------------------------------------------------------------------------
 
 function displayBalanceall(data) {
@@ -158,6 +164,38 @@ function displayBalance(data) {
         tokenRow.innerHTML = `<td>Token ID: ${tokenId} (Decimals: ${tokenDecimal})</td><td>${tokenAmount.low}.${tokenAmount.high}</td>`;
         table.appendChild(tokenRow);
     }
+
+    // Append the table to the output div
+    outputDiv.appendChild(table);
+}
+
+function displayProducts(data) {
+    // Parse the incoming data (assuming it is a JSON string)
+    const products = JSON.parse(data);
+    console.log(products);
+
+    const outputDiv = document.getElementById('output');
+    outputDiv.innerHTML = ''; // Clear previous output
+
+    // Create a table
+    const table = document.createElement('table');
+    const headerRow = document.createElement('tr');
+
+    // Create headers
+    const headers = ['Topic ID', 'Metadata'];
+    headers.forEach(headerText => {
+        const header = document.createElement('th');
+        header.textContent = headerText;
+        headerRow.appendChild(header);
+    });
+    table.appendChild(headerRow);
+
+    // Add product data to the table
+    products.forEach(product => {
+        const productRow = document.createElement('tr');
+        productRow.innerHTML = `<td>${product.topicId}</td><td>${product.metadata}</td>`;
+        table.appendChild(productRow);
+    });
 
     // Append the table to the output div
     outputDiv.appendChild(table);
