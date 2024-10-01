@@ -10,6 +10,7 @@ const { check_balance_all } = require('./check_balance_all');
 const { create_token } = require('./create_token');
 const { fetch_messages } = require('./fetch_messages'); // Import the new module
 const { fetch_topic_metadata } = require('./fetch_topic_metadata'); // Import the new module
+const { send_message } = require('./send_message');
 
 const app = express();
 const server = http.createServer(app);
@@ -60,6 +61,12 @@ io.on('connection', (socket) => {
                     socket.emit('logout');
                     break;
 
+                case 'send_message':
+                    const [topicToSend, messageContent] = args; // Get message and topic from args
+                    const response = await send_message(messageContent, accountSN, topicToSend);
+                    socket.emit('output', response);
+                    break;
+
                 case 'create_product':
                     const topic = await create_product(centralTopic, accountSN, args[1]);
                     socket.emit('output', `Product created with topic: ${topic}`);
@@ -97,12 +104,14 @@ io.on('connection', (socket) => {
                     });
                     break;
 
+
                 case 'help':
                     socket.emit('output', 
                         `Available commands: 
                         login <serial num>, 
                         create_product <product name>, 
-                        check_balance, 
+                        check_balance,
+                        send_message <topicId> <message>,  
                         check_balance_all, 
                         create_token <name> <hbar>, 
                         fetch_messages <topicId>, 

@@ -67,7 +67,18 @@ socket.on('products', (data) => {
     outputElement.scrollTop = outputElement.scrollHeight; // Auto scroll to the bottom
 });
 
+
+
+
+
+
+
 //----------------------------------------------------------------------------------------------------------
+
+
+
+
+
 
 function displayBalanceall(data) {
     const balances = JSON.parse(data);

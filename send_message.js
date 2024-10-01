@@ -15,6 +15,7 @@ async function sendEncryptedMessage(topicId, encryptedMessage,client) {
     const receipt = await response.getReceipt(client);
     
     console.log(`Encrypted message sent to topic: ${topicId}`);
+    return `Encrypted message sent to topic: ${topicId}`;
 }
 
 
@@ -26,19 +27,19 @@ async function signMessage(privateKey,message,client) {
 }
 
 
-async function send(testData,account_num,topicId){
+async function send_message(testData,account_num,topicId){
     client.setOperator(account[account_num].account_id, account[account_num].private_key);
     const privateKey = PrivateKey.fromString(account[0].private_key);
     const signature = await signMessage(privateKey, testData,client);
     console.log('Signature:', signature);
     const message = { "testdata": testData, "signature":Buffer.from(signature).toString('hex')};
-    sendEncryptedMessage(topicId, JSON.stringify(message),client);
+    return sendEncryptedMessage(topicId, JSON.stringify(message),client);
 
 }
 const topicId = "0.0.4842073";
 
 
-module.exports = {send};
+module.exports = {send_message};
 
 
 
