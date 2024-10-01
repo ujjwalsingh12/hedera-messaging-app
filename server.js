@@ -11,6 +11,7 @@ const { create_token } = require('./create_token');
 const { fetch_messages } = require('./fetch_messages'); // Import the new module
 const { fetch_topic_metadata } = require('./fetch_topic_metadata'); // Import the new module
 const { send_message } = require('./send_message');
+const { transferTokens } = require('./transfer_token');
 
 const app = express();
 const server = http.createServer(app);
@@ -87,6 +88,12 @@ io.on('connection', (socket) => {
                     const tokenId = await create_token(credentials.account_id, args[0], credentials.account_id, args[1]);
                     socket.emit('output', `Token created with ID: ${tokenId}`);
                     break;
+                case 'transfer_token':
+                    const transfer = await transferTokens(credentials.account_id,credentials.private_key,args[1],args[2],parseInt(args[3]));
+                    console.log(transfer,Number(args[2]));
+                    // console.log(`${credentials.account_id},${credentials.private_key},${args[1]},${args[2]},${args[3]}`);
+                    socket.emit('output',transfer);
+                    break;
 
                 case 'fetch_products':
                     const topicId = centralTopic; // Get the topicId from the arguments
@@ -118,15 +125,18 @@ io.on('connection', (socket) => {
                 case 'help':
                     socket.emit('output', 
                         `Available commands: 
-                        login <serial num>, 
-                        create_product <product name>, 
-                        check_balance,
-                        send_message <topicId> <message>,  
-                        check_balance_all, 
-                        create_token <name> <hbar>, 
-                        fetch_products, 
-                        fetch_messages <topicId>, 
-                        clear`);
+                    1: login -serial num-
+                    2: logout
+                    3: create_product -product name-
+                    4: check_balance
+                    5: send_message -topicId- -message-
+                    6: check_balance_all
+                    7: create_token -name- -hbar-
+                    8: fetch_products
+                    9: fetch_messages -topicId-
+                    10: transfer_token -tokenid- -receipeintId- -numberOfTokens-
+                    clear
+                    `);
                     break;
 
                 case 'clear':

@@ -1,126 +1,45 @@
-console.clear();
-require("dotenv").config();
-const {
-	AccountId,
-	PrivateKey,
-	Client,
-	TokenCreateTransaction,
-	TokenType,
-	TokenSupplyType,
-	TransferTransaction,
-	AccountBalanceQuery,
-	TokenAssociateTransaction,
-} = require("@hashgraph/sdk");
+// Import necessary classes from the SDK
+const { Client, TransferTransaction, Hbar, PrivateKey } = require('@hashgraph/sdk');
 
-// Configure accounts and client, and generate needed keys
-const operatorId = AccountId.fromString(process.env.HEDERA_ACCOUNT_ID);
-const operatorKey = PrivateKey.fromString(process.env.HEDERA_PRIVATE_KEY);
-const treasuryId = AccountId.fromString(process.env.HEDERA_ACCOUNT_ID);
-const treasuryKey = PrivateKey.fromString(process.env.HEDERA_PRIVATE_KEY);
-const aliceId = AccountId.fromString(process.env.HEDERA_ACCOUNT_ID2);
-const aliceKey = PrivateKey.fromString(process.env.HEDERA_PRIVATE_KEY2);
 
-const client = Client.forTestnet().setOperator(operatorId, operatorKey);
+async function transferTokens(operatorId,pk,tokenId,recipientAccountId,amount) {
+    // Configure your client with the operator account
+    const client = Client.forTestnet(); // Use Client.forMainnet() for mainnet
+    // const operatorId = '0.0.4515812'; // Replace with your operator account ID
+    // const pk = '3030020100300706052b8104000a042204209c4ef546bcda3d7cc377d1acfe9036828e1e1c3e2129e4d0f245132302da5c76';
+    const operatorPrivateKey = PrivateKey.fromString(pk); // Replace with your operator private key
+    client.setOperator(operatorId, operatorPrivateKey);
+    
+    // Define the token ID and account IDs involved in the transfer
+    // const tokenId = '0.0.4842692'; // Replace with your token ID
+    const senderAccountId = operatorId; // Replace with the sender account ID
+    // const recipientAccountId = '0.0.4819262'; // Replace with the recipient account ID
+    let resp="";
+    try {
+        // Create a Token Transfer Transaction
+        const tokenTransferTx = new TransferTransaction()
+            .addTokenTransfer(tokenId, senderAccountId, -1*amount) // Subtract 1 token from the sender
+            .addTokenTransfer(tokenId, recipientAccountId, amount) // Add 1 token to the recipient
+            .freezeWith(client); // Freeze the transaction
 
-const supplyKey = PrivateKey.generate();
+        // Sign the transaction
+        const signTx = await tokenTransferTx.sign(operatorPrivateKey);
 
-async function createFungibleToken() {
-	//CREATE FUNGIBLE TOKEN (STABLECOIN)
-	let tokenCreateTx = await new TokenCreateTransaction()
-		.setTokenName("USD Bar")
-		.setTokenSymbol("USDB")
-		.setTokenType(TokenType.FungibleCommon)
-		.setDecimals(2)
-		.setInitialSupply(10000)
-		.setTreasuryAccountId(treasuryId)
-		.setSupplyType(TokenSupplyType.Infinite)
-		.setSupplyKey(supplyKey)
-		.freezeWith(client);
+        // Submit the transaction to the Hedera network
+        const txResponse = await signTx.execute(client);
 
-	let tokenCreateSign = await tokenCreateTx.sign(treasuryKey);
-	let tokenCreateSubmit = await tokenCreateSign.execute(client);
-	let tokenCreateRx = await tokenCreateSubmit.getReceipt(client);
-	let tokenId = tokenCreateRx.tokenId;
-	console.log(`- Created token with ID: ${tokenId} \n`);
+        // Get the receipt of the transaction
+        const receipt = await txResponse.getReceipt(client);
 
-	//TOKEN ASSOCIATION WITH ALICE's ACCOUNT
-	let associateAliceTx = await new TokenAssociateTransaction()
-		.setAccountId(aliceId)
-		.setTokenIds([tokenId])
-		.freezeWith(client)
-		.sign(aliceKey);
-	let associateAliceTxSubmit = await associateAliceTx.execute(client);
-	let associateAliceRx = await associateAliceTxSubmit.getReceipt(client);
-	console.log(`- Token association with Alice's account: ${associateAliceRx.status} \n`);
-
-	//BALANCE CHECK
-	var balanceCheckTx = await new AccountBalanceQuery().setAccountId(treasuryId).execute(client);
-	console.log(`- Treasury balance: ${balanceCheckTx.tokens._map.get(tokenId.toString())} units of token ID ${tokenId}`);
-	var balanceCheckTx = await new AccountBalanceQuery().setAccountId(aliceId).execute(client);
-	console.log(`- Alice's balance: ${balanceCheckTx.tokens._map.get(tokenId.toString())} units of token ID ${tokenId}`);
-
-	//TRANSFER STABLECOIN FROM TREASURY TO ALICE
-	let tokenTransferTx = await new TransferTransaction()
-		.addTokenTransfer(tokenId, treasuryId, -5)
-		.addTokenTransfer(tokenId, aliceId, 5)
-		.freezeWith(client)
-		.sign(treasuryKey);
-	let tokenTransferSubmit = await tokenTransferTx.execute(client);
-	let tokenTransferRx = await tokenTransferSubmit.getReceipt(client);
-	console.log(`\n- Stablecoin transfer from Treasury to Alice: ${tokenTransferRx.status} \n`);
-
-	//BALANCE CHECK
-	var balanceCheckTx = await new AccountBalanceQuery().setAccountId(treasuryId).execute(client);
-	console.log(`- Treasury balance: ${balanceCheckTx.tokens._map.get(tokenId.toString())} units of token ID ${tokenId}`);
-	var balanceCheckTx = await new AccountBalanceQuery().setAccountId(aliceId).execute(client);
-	console.log(`- Alice's balance: ${balanceCheckTx.tokens._map.get(tokenId.toString())} units of token ID ${tokenId}`);
+        // Log the transaction status
+        resp = `Transaction Status: ${receipt.status.toString()}`;
+    } catch (error) {
+        resp = "Error transferring tokens:";
+    }
+    return resp;
 }
-createFungibleToken();
 
+module.exports = {transferTokens};
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const { Client, TransferTransaction, Hbar } = require("@hashgraph/sdk");
-// require("dotenv").config();
-// // Configure the Hedera client
-// const client = Client.forTestnet(); // Use for mainnet if necessary
-// client.setOperator(process.env.HEDERA_ACCOUNT_ID, process.env.HEDERA_PRIVATE_KEY); // Replace with your account ID and private key
-
-// async function transferToken(tokenId, recipientId, amount) {
-//     // Create the token transfer transaction
-//     const transaction = await new TransferTransaction()
-//         .addTokenTransfer(tokenId, process.env.HEDERA_ACCOUNT_ID, -amount) // Send tokens from your account
-//         .addTokenTransfer(tokenId, recipientId, amount) // Receive tokens in the recipient's account
-//         .execute(client); // Execute the transaction
-
-//     // Get the receipt of the transaction
-//     const receipt = await transaction.getReceipt(client);
-//     console.log(`Transaction status: ${receipt.status.toString()}`);
-// }
-
-// // Example usage
-// const tokenId = "0.0.4842692"; // Replace with your token ID
-// const recipientId = process.env.HEDERA_ACCOUNT_ID2; // Replace with the recipient's account ID
-// const amount = 10; // Amount of tokens to transfer
-
-// transferToken(tokenId, recipientId, amount)
-//     .catch(err => {
-//         console.error("Error transferring tokens:", err);
-//     });
+// Call the function to perform the token transfer
+// console.log(transferTokens('0.0.4515812','3030020100300706052b8104000a042204209c4ef546bcda3d7cc377d1acfe9036828e1e1c3e2129e4d0f245132302da5c76','0.0.4842692','0.0.4819262',1));

@@ -4,9 +4,10 @@ body {
     color: #c5c8c6;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* Change to flex-start for scrollable content */
     height: 100vh;
     margin: 0;
+    overflow: auto; /* Allow scrolling for the entire body */
 }
 
 #terminal {
@@ -16,13 +17,15 @@ body {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    overflow-y: auto; /* Allow the terminal to scroll if content exceeds its height */
+    max-height: 80vh; /* Set a max-height for the terminal */
 }
 
 #output {
     min-height: 300px;
     margin-bottom: 10px;
     white-space: pre-wrap;
-    overflow-y: auto;
+    overflow-y: auto; /* Ensure output can scroll */
 }
 
 #input {
@@ -34,16 +37,19 @@ body {
     padding: 10px;
     outline: none;
 }
+
 table {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
 }
+
 th, td {
     border: 1px solid #ddd;
     padding: 10px;
     text-align: left;
 }
+
 th {
     background-color: #f2f2f2;
 }
