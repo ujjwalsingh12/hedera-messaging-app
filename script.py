@@ -73,6 +73,28 @@ def signal_handler(signum, frame):
     sys.stdout.flush()
 
 def main():
+    """
+    Main function to manage and execute Node.js scripts interactively.
+    This function performs the following tasks:
+    1. Lists available Node.js scripts.
+    2. Sets up a signal handler for SIGINT (Ctrl+C) to handle interruptions gracefully.
+    3. Continuously prompts the user to select scripts to run or exit the program.
+    4. Validates user input and ensures the selected scripts exist.
+    5. Executes the selected Node.js scripts with the provided or prompted arguments.
+    Key Features:
+    - Displays a list of available scripts with their corresponding numbers.
+    - Allows users to select multiple scripts to run by entering their numbers (comma-separated).
+    - Provides an option to exit the program by typing 'exit'.
+    - Ensures that only valid script numbers are processed.
+    - Handles missing script files gracefully by displaying an error message.
+    Note:
+    - The function assumes the existence of helper functions `list_node_scripts`, 
+        `signal_handler`, and `run_node_program`.
+    - The `current_process` variable is used to manage any running processes and 
+        should be defined in the global scope.
+    Raises:
+    - SystemExit: When the user chooses to exit the program.
+    """
     scripts = list_node_scripts()
     
     # Setup signal handler for SIGINT (Ctrl+C)
