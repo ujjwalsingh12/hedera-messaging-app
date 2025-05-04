@@ -13,7 +13,7 @@ const privateKey = PrivateKey.fromString("3030020100300706052b8104000a042204209c
 const client = Client.forTestnet().setOperator(accountId, privateKey);
 
 // Contract ID on Hedera testnet
-const contractId = "0.0.5892050"; //"0.0.5861199";
+const contractId = "0.0.5908158"; //"0.0.5861199";
 
 // JSON metadata
 const userMetadata = {
