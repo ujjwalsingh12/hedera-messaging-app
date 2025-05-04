@@ -8,10 +8,7 @@ contract TrustToken {
 
     address public registry;
 
-    // modifier onlyRegistry() {
-    //     require(msg.sender == registry, "Only registry contract can mint");
-    //     _;
-    // }
+    address[] public registeredUsers;
 
     constructor() {
         // Leave registry unset; can be set later manually by owner
@@ -27,6 +24,7 @@ contract TrustToken {
         registered[user] = true;
         balances[user] = 2;
         reputation[user] = 0;
+        registeredUsers.push(user);
     }
 
     function transfer(address to, uint256 amount) external {
@@ -37,5 +35,9 @@ contract TrustToken {
         balances[msg.sender] -= amount;
         balances[to] += amount;
         reputation[to] += amount;
+    }
+
+    function getRegisteredUsers() external view returns (address[] memory) {
+        return registeredUsers;
     }
 }

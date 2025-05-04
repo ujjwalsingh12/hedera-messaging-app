@@ -1,0 +1,60 @@
+{
+	"compiler": {
+		"version": "0.8.26+commit.8a97fa7a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"name": "mintOnRegistration",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"notice": "Interface for the TrustToken contract",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"userregistry.sol": "ITrustToken"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"userregistry.sol": {
+			"keccak256": "0xf8d6df5c5a5467418b07c48183dab43060d571a79375527e9680ea0fb705e126",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://526793a098e2165633e216061f24bf30c2053fb151d730d3c34ab9411ae368bb",
+				"dweb:/ipfs/QmSnsgnRH4nCqmbrjKuZ1cgKuy35vK38JyBR1NWEHkCNUz"
+			]
+		}
+	},
+	"version": 1
+}

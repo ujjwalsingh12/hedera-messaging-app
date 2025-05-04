@@ -1,0 +1,125 @@
+{
+	"compiler": {
+		"version": "0.8.26+commit.8a97fa7a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"name": "balanceOf",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "changeOwner",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "name",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "symbol",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalSupply",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"p2product_factory.sol": "IMyToken"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"mytoken.sol": {
+			"keccak256": "0x69ce1f1d5210efa3f9e1f696733a885880c66161a970724c4cfa4cbbedb28a16",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://3a310ef3eac7bc53e71a3c6380fa28c8a6f1047232fd2622a164da45400e8fb8",
+				"dweb:/ipfs/QmXy2UJmzCezaT4StGtEJ8Yh2kYfkfpanq7VzomJKYpgeU"
+			]
+		},
+		"p2product_factory.sol": {
+			"keccak256": "0x00051c9239f2a23157a9871f3683ea22ec2123b0e7d3ae82de8cb5c17174d996",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://67419879cea2868d56abe0b278a911d3b72ad71c8c6413ec270a78f4a3671727",
+				"dweb:/ipfs/QmRQ44iTRhSNwxbUecL4wuY6iLAa38KnjAw2R3KVJyxqhM"
+			]
+		}
+	},
+	"version": 1
+}

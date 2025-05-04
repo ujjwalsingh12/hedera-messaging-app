@@ -1,0 +1,261 @@
+{
+	"compiler": {
+		"version": "0.8.26+commit.8a97fa7a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_trustToken",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newScore",
+						"type": "uint256"
+					}
+				],
+				"name": "ReputationUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "metadata",
+						"type": "string"
+					}
+				],
+				"name": "UserRegistered",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "getAllUsers",
+				"outputs": [
+					{
+						"internalType": "address[]",
+						"name": "userList",
+						"type": "address[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"name": "getUserMetadata",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"name": "isRegistered",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "metadata",
+						"type": "string"
+					}
+				],
+				"name": "registerUser",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "reputationScore",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalUsers",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "trustToken",
+				"outputs": [
+					{
+						"internalType": "contract ITrustToken",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "reviewer",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "isUpvote",
+						"type": "bool"
+					},
+					{
+						"internalType": "address",
+						"name": "voter",
+						"type": "address"
+					}
+				],
+				"name": "updateReputationOnVote",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"registerUser(string)": {
+					"params": {
+						"metadata": "User metadata in JSON format"
+					}
+				},
+				"updateReputationOnVote(address,bool,address)": {
+					"params": {
+						"isUpvote": "True for upvote, false for downvote",
+						"reviewer": "The user who wrote the review",
+						"voter": "The address of the voter"
+					}
+				}
+			},
+			"title": "UserRegistry",
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"constructor": {
+					"notice": "Constructor to initialize TrustToken address"
+				},
+				"getAllUsers()": {
+					"notice": "Returns the list of all registered user addresses"
+				},
+				"getUserMetadata(address)": {
+					"notice": "Returns metadata of a given user"
+				},
+				"isRegistered(address)": {
+					"notice": "Returns whether a user is registered"
+				},
+				"registerUser(string)": {
+					"notice": "Registers a user and mints TrustTokens"
+				},
+				"updateReputationOnVote(address,bool,address)": {
+					"notice": "Updates reviewer's reputation after upvote/downvote and burns token externally"
+				}
+			},
+			"notice": "Manages user registration and links to TrustToken minting",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"userregistry.sol": "UserRegistry"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"userregistry.sol": {
+			"keccak256": "0xf8d6df5c5a5467418b07c48183dab43060d571a79375527e9680ea0fb705e126",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://526793a098e2165633e216061f24bf30c2053fb151d730d3c34ab9411ae368bb",
+				"dweb:/ipfs/QmSnsgnRH4nCqmbrjKuZ1cgKuy35vK38JyBR1NWEHkCNUz"
+			]
+		}
+	},
+	"version": 1
+}
