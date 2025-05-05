@@ -49,8 +49,8 @@
 		},
 		"gasEstimates": null,
 		"methodIdentifiers": {
-			"mintOnRegistration(address)": "0686ec10",
-			"reputation(address)": "b9f79451"
+			"burnFrom(address,uint256)": "79cc6790",
+			"transferToReviewer(address,uint256)": "7bbd7d40"
 		}
 	},
 	"abi": [
@@ -58,11 +58,16 @@
 			"inputs": [
 				{
 					"internalType": "address",
-					"name": "user",
+					"name": "from",
 					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "amount",
+					"type": "uint256"
 				}
 			],
-			"name": "mintOnRegistration",
+			"name": "burnFrom",
 			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"
@@ -71,19 +76,18 @@
 			"inputs": [
 				{
 					"internalType": "address",
-					"name": "user",
+					"name": "reviewer",
 					"type": "address"
-				}
-			],
-			"name": "reputation",
-			"outputs": [
+				},
 				{
 					"internalType": "uint256",
-					"name": "",
+					"name": "amount",
 					"type": "uint256"
 				}
 			],
-			"stateMutability": "view",
+			"name": "transferToReviewer",
+			"outputs": [],
+			"stateMutability": "nonpayable",
 			"type": "function"
 		}
 	]

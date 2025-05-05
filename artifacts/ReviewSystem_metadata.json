@@ -9,7 +9,17 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_userRegistry",
+						"name": "_registry",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_upvoteToken",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_downvoteToken",
 						"type": "address"
 					}
 				],
@@ -21,36 +31,30 @@
 				"inputs": [
 					{
 						"indexed": true,
+						"internalType": "uint256",
+						"name": "reviewId",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
 						"internalType": "address",
 						"name": "reviewer",
 						"type": "address"
 					},
 					{
-						"indexed": true,
+						"indexed": false,
 						"internalType": "address",
-						"name": "product",
+						"name": "productToken",
 						"type": "address"
-					},
-					{
-						"indexed": true,
-						"internalType": "bytes32",
-						"name": "reviewId",
-						"type": "bytes32"
 					},
 					{
 						"indexed": false,
 						"internalType": "string",
-						"name": "reviewText",
+						"name": "content",
 						"type": "string"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "reputationAtReviewTime",
-						"type": "uint256"
 					}
 				],
-				"name": "ReviewCreated",
+				"name": "ReviewSubmitted",
 				"type": "event"
 			},
 			{
@@ -58,40 +62,40 @@
 				"inputs": [
 					{
 						"indexed": true,
-						"internalType": "address",
-						"name": "upvoter",
-						"type": "address"
+						"internalType": "uint256",
+						"name": "reviewId",
+						"type": "uint256"
 					},
 					{
 						"indexed": true,
-						"internalType": "bytes32",
-						"name": "reviewId",
-						"type": "bytes32"
+						"internalType": "address",
+						"name": "voter",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "isUpvote",
+						"type": "bool"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "updatedUpvoteCount",
+						"name": "newScore",
 						"type": "uint256"
 					}
 				],
-				"name": "Upvoted",
+				"name": "ReviewVoted",
 				"type": "event"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "reviewId",
-						"type": "bytes32"
-					}
-				],
-				"name": "getAuthenticityScore",
+				"inputs": [],
+				"name": "downvoteToken",
 				"outputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "contract IVoteToken",
 						"name": "",
-						"type": "uint256"
+						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -100,12 +104,12 @@
 			{
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "product",
-						"type": "address"
+						"internalType": "uint256",
+						"name": "reviewId",
+						"type": "uint256"
 					}
 				],
-				"name": "getReviewsForProduct",
+				"name": "getReview",
 				"outputs": [
 					{
 						"components": [
@@ -116,23 +120,33 @@
 							},
 							{
 								"internalType": "address",
-								"name": "product",
+								"name": "productToken",
 								"type": "address"
 							},
 							{
 								"internalType": "string",
-								"name": "reviewText",
+								"name": "content",
 								"type": "string"
 							},
 							{
 								"internalType": "uint256",
-								"name": "upvoteCount",
+								"name": "upvoteRep",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "downvoteRep",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "authenticityScore",
 								"type": "uint256"
 							}
 						],
-						"internalType": "struct ReviewSystem.Review[]",
+						"internalType": "struct ReviewSystem.Review",
 						"name": "",
-						"type": "tuple[]"
+						"type": "tuple"
 					}
 				],
 				"stateMutability": "view",
@@ -141,9 +155,9 @@
 			{
 				"inputs": [
 					{
-						"internalType": "bytes32",
+						"internalType": "uint256",
 						"name": "",
-						"type": "bytes32"
+						"type": "uint256"
 					},
 					{
 						"internalType": "address",
@@ -151,7 +165,7 @@
 						"type": "address"
 					}
 				],
-				"name": "hasUpvoted",
+				"name": "hasVoted",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -163,38 +177,21 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
 					{
 						"internalType": "address",
 						"name": "",
 						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "productReviews",
-				"outputs": [
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
 					}
 				],
 				"stateMutability": "view",
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"name": "reputation",
+				"inputs": [],
+				"name": "reviewCounter",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -208,9 +205,9 @@
 			{
 				"inputs": [
 					{
-						"internalType": "bytes32",
+						"internalType": "uint256",
 						"name": "",
-						"type": "bytes32"
+						"type": "uint256"
 					}
 				],
 				"name": "reviews",
@@ -222,17 +219,27 @@
 					},
 					{
 						"internalType": "address",
-						"name": "product",
+						"name": "productToken",
 						"type": "address"
 					},
 					{
 						"internalType": "string",
-						"name": "reviewText",
+						"name": "content",
 						"type": "string"
 					},
 					{
 						"internalType": "uint256",
-						"name": "upvoteCount",
+						"name": "upvoteRep",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "downvoteRep",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "authenticityScore",
 						"type": "uint256"
 					}
 				],
@@ -243,12 +250,12 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "product",
+						"name": "productToken",
 						"type": "address"
 					},
 					{
 						"internalType": "string",
-						"name": "reviewText",
+						"name": "content",
 						"type": "string"
 					}
 				],
@@ -258,34 +265,16 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
+				"inputs": [],
+				"name": "upvoteToken",
+				"outputs": [
 					{
-						"internalType": "address",
-						"name": "user",
+						"internalType": "contract IVoteToken",
+						"name": "",
 						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "newReputation",
-						"type": "uint256"
 					}
 				],
-				"name": "updateReputation",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "reviewId",
-						"type": "bytes32"
-					}
-				],
-				"name": "upvoteReview",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -299,6 +288,24 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "reviewId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "isUpvote",
+						"type": "bool"
+					}
+				],
+				"name": "voteOnReview",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
@@ -315,7 +322,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"review.sol": "ReviewSystem"
+			"reviewsys.sol": "ReviewSystem"
 		},
 		"evmVersion": "cancun",
 		"libraries": {},
@@ -329,12 +336,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"review.sol": {
-			"keccak256": "0x40fdd209b8d8e19825bb7c95e13b1ee1e5f2dd63f16ac53f3d814178f8ea8d34",
+		"reviewsys.sol": {
+			"keccak256": "0x32015c7ef60360c5998154e15c7d02f55a59444f794d8022d30842c0bf5d33ed",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://bfc522a70ea45700431b52fe2350f96e60cffd81dd4d430f1e0fe67be69ec11e",
-				"dweb:/ipfs/QmXMNvvTe1KuW1we6PMTpfcaZvPtaSFX2BP6gstvVHMY2v"
+				"bzz-raw://1870aef96cfdbbf9e036089cf8eaff99cca0d6c91b222202ce598bbc57bd5695",
+				"dweb:/ipfs/QmVNW4uFm9YBf1Ey51riX7nSDjbuzU5n3KVmBPcYh6Xfyf"
 			]
 		}
 	},

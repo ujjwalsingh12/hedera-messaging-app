@@ -9,87 +9,51 @@ interface IUserRegistry {
 
 contract ProductFactory {
     IUserRegistry public userRegistry;
-
     mapping(address => address[]) public userTokens;
     address[] public allTokens;
-    mapping(address => address[]) public TokenOwners;
-    mapping(address => address[]) public TokenCreators;
-    
-    struct TokenInfo {
-        string name;
-        string symbol;
-    }
 
-    mapping(address => TokenInfo) public tokenDetails;
-
-    event TokenCreated(
-        address indexed tokenAddress,
-        address indexed creator,
-        string name,
-        string symbol
-    );
-
+    event TokenCreated(address indexed tokenAddress, address indexed creator, string name, string symbol);
     event ProductMinted(address indexed to, address indexed token, uint256 amount);
     event ProductTokenTransferred(address indexed from, address indexed to, address indexed token, uint256 amount);
 
     constructor(address _userRegistryAddress) {
-        require(_userRegistryAddress != address(0), "Invalid UserRegistry address");
+        require(_userRegistryAddress != address(0), "Invalid registry address");
         userRegistry = IUserRegistry(_userRegistryAddress);
     }
 
-    function createToken(
-        string memory name,
-        string memory symbol
-    ) external returns (address) {
+    function createToken(string memory name, string memory symbol) external returns (address) {
         bool registered = false;
         try userRegistry.isRegistered(msg.sender) returns (bool isRegistered) {
             registered = isRegistered;
         } catch {
             revert("Failed to verify registration");
         }
+        // require(userRegistry.isRegistered(msg.sender), "User not registered");
 
         MyTokenOnHedera token = new MyTokenOnHedera(name, symbol, msg.sender, address(this));
         address tokenAddr = address(token);
 
         userTokens[msg.sender].push(tokenAddr);
         allTokens.push(tokenAddr);
-        tokenDetails[tokenAddr] = TokenInfo(name, symbol);
 
         emit TokenCreated(tokenAddr, msg.sender, name, symbol);
         return tokenAddr;
     }
 
-    function createMore(address tokenAddress, uint256 amount) external {
-        require(tokenAddress != address(0), "Invalid token address");
-        require(amount > 0, "Amount must be > 0");
-
+    function mintProduct(address tokenAddress, uint256 amount) external {
+        require(amount > 0, "Invalid amount");
         MyTokenOnHedera token = MyTokenOnHedera(tokenAddress);
-        require(token.getOwner() == msg.sender, "Only token owner can mint more");
-
+        require(token.getOwner() == msg.sender, "Not token owner");
         token.mintTo(msg.sender, amount);
         emit ProductMinted(msg.sender, tokenAddress, amount);
     }
 
-    function purchaseProduct(address tokenAddress, address buyer, uint256 amount) external {
-        require(tokenAddress != address(0), "Invalid token address");
-        require(buyer != address(0), "Invalid buyer");
-        require(amount > 0, "Amount must be > 0");
-
-        MyTokenOnHedera(tokenAddress).mintTo(buyer, amount);
-        emit ProductMinted(buyer, tokenAddress, amount);
-    }
-
     function transferProductToken(address tokenAddress, address to, uint256 amount) external {
-        require(tokenAddress != address(0), "Invalid token address");
-        require(to != address(0), "Invalid recipient");
-        require(amount > 0, "Transfer amount must be > 0");
-
+        require(to != address(0) && amount > 0, "Invalid params");
         MyTokenOnHedera token = MyTokenOnHedera(tokenAddress);
-        require(token.balanceOf(msg.sender) >= amount, "Not enough tokens to transfer");
-
+        require(token.balanceOf(msg.sender) >= amount, "Insufficient balance");
         token.burnFrom(msg.sender, amount);
         token.mintTo(to, amount);
-
         emit ProductTokenTransferred(msg.sender, to, tokenAddress, amount);
     }
 

@@ -9,11 +9,16 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "user",
+						"name": "from",
 						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
 					}
 				],
-				"name": "mintOnRegistration",
+				"name": "burnFrom",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -22,19 +27,18 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "user",
+						"name": "reviewer",
 						"type": "address"
-					}
-				],
-				"name": "reputation",
-				"outputs": [
+					},
 					{
 						"internalType": "uint256",
-						"name": "",
+						"name": "amount",
 						"type": "uint256"
 					}
 				],
-				"stateMutability": "view",
+				"name": "transferToReviewer",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
@@ -51,7 +55,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"reviewsys.sol": "ITrustToken"
+			"reviewsys.sol": "IVoteToken"
 		},
 		"evmVersion": "cancun",
 		"libraries": {},
