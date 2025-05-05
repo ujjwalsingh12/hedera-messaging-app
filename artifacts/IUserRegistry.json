@@ -49,7 +49,9 @@
 		},
 		"gasEstimates": null,
 		"methodIdentifiers": {
-			"isRegistered(address)": "c3c5a547"
+			"isRegistered(address)": "c3c5a547",
+			"reputationScore(address)": "50d061cb",
+			"updateReputationOnVote(address,bool,address)": "b6b7b912"
 		}
 	},
 	"abi": [
@@ -70,6 +72,48 @@
 				}
 			],
 			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "user",
+					"type": "address"
+				}
+			],
+			"name": "reputationScore",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "reviewer",
+					"type": "address"
+				},
+				{
+					"internalType": "bool",
+					"name": "isUpvote",
+					"type": "bool"
+				},
+				{
+					"internalType": "address",
+					"name": "voter",
+					"type": "address"
+				}
+			],
+			"name": "updateReputationOnVote",
+			"outputs": [],
+			"stateMutability": "nonpayable",
 			"type": "function"
 		}
 	]

@@ -28,7 +28,7 @@ contract ProductFactory {
         } catch {
             revert("Failed to verify registration");
         }
-        // require(userRegistry.isRegistered(msg.sender), "User not registered");
+        require(userRegistry.isRegistered(msg.sender), "User not registered");
 
         MyTokenOnHedera token = new MyTokenOnHedera(name, symbol, msg.sender, address(this));
         address tokenAddr = address(token);

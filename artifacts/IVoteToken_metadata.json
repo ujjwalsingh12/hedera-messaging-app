@@ -70,11 +70,11 @@
 	},
 	"sources": {
 		"reviewsys.sol": {
-			"keccak256": "0x32015c7ef60360c5998154e15c7d02f55a59444f794d8022d30842c0bf5d33ed",
+			"keccak256": "0x5c7190ccdf876fed2f03bfb7c5e95d163c99bf3c192f6f8b81dfda5fd0aeca65",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://1870aef96cfdbbf9e036089cf8eaff99cca0d6c91b222202ce598bbc57bd5695",
-				"dweb:/ipfs/QmVNW4uFm9YBf1Ey51riX7nSDjbuzU5n3KVmBPcYh6Xfyf"
+				"bzz-raw://4960a68ac58f509fb851b43f6c6a55a40101a563ecde9be966e8d407b47a1d9d",
+				"dweb:/ipfs/QmX1DuHHUYRhsQutwEL8CVCEFAMjec7aT2THNBXMHnhtSp"
 			]
 		}
 	},

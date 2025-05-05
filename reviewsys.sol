@@ -64,37 +64,33 @@ contract ReviewSystem {
         reviewCounter++;
     }
 
-    function voteOnReview(uint256 reviewId, bool isUpvote) external {
-        require(userRegistry.isRegistered(msg.sender), "Not registered");
-        require(reviewId < reviewCounter, "Invalid review");
-        require(!hasVoted[reviewId][msg.sender], "Already voted");
-        require(msg.sender != reviews[reviewId].reviewer, "Cannot vote on own review");
+function voteOnReview(uint256 reviewId, bool isUpvote) external {
+    require(userRegistry.isRegistered(msg.sender), "Not registered");
+    require(reviewId < reviewCounter, "Invalid review");
+    require(!hasVoted[reviewId][msg.sender], "Already voted");
+    require(msg.sender != reviews[reviewId].reviewer, "Cannot vote on own review");
 
-        uint256 voterRep = userRegistry.reputationScore(msg.sender);
-        uint256 delta = voterRep / 10;
+    Review storage r = reviews[reviewId];
+    address reviewer = r.reviewer;
 
-        if (isUpvote) {
-            upvoteToken.burnFrom(msg.sender, 1);
-            upvoteToken.transferToReviewer(reviews[reviewId].reviewer, 1);
-            reviews[reviewId].upvoteRep += delta;
-        } else {
-            downvoteToken.burnFrom(msg.sender, 1);
-            downvoteToken.transferToReviewer(reviews[reviewId].reviewer, 1);
-            reviews[reviewId].downvoteRep += delta;
-        }
+    uint256 voterRep = userRegistry.reputationScore(msg.sender);
+    uint256 reviewerRep = userRegistry.reputationScore(reviewer);
+    uint256 delta = voterRep / 10;
 
-        reviews[reviewId].authenticityScore =
-            userRegistry.reputationScore(reviews[reviewId].reviewer) +
-            reviews[reviewId].upvoteRep -
-            reviews[reviewId].downvoteRep;
-
-        hasVoted[reviewId][msg.sender] = true;
-        userRegistry.updateReputationOnVote(reviews[reviewId].reviewer, isUpvote, msg.sender);
-
-        emit ReviewVoted(reviewId, msg.sender, isUpvote, reviews[reviewId].authenticityScore);
+    if (isUpvote) {
+        upvoteToken.burnFrom(msg.sender, 1);
+        upvoteToken.transferToReviewer(reviewer, 1);
+        r.upvoteRep += delta;
+    } else {
+        downvoteToken.burnFrom(msg.sender, 1);
+        downvoteToken.transferToReviewer(reviewer, 1);
+        r.downvoteRep += delta;
     }
 
-    function getReview(uint256 reviewId) external view returns (Review memory) {
-        return reviews[reviewId];
-    }
+    r.authenticityScore = reviewerRep + r.upvoteRep - r.downvoteRep;
+    hasVoted[reviewId][msg.sender] = true;
+
+    userRegistry.updateReputationOnVote(reviewer, isUpvote, msg.sender);
+    emit ReviewVoted(reviewId, msg.sender, isUpvote, r.authenticityScore);
+}
 }
