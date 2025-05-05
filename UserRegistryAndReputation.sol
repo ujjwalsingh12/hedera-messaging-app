@@ -133,7 +133,7 @@ function transferTrustToken(address to, uint256 amount) external {
     trustToken.transfer(msg.sender,to, amount);
 
     // Increase recipient's reputation based on amount
-    reputationScore[to] += amount;
+    reputationScore[to] += amount*100;
 
     emit ReputationUpdated(to, reputationScore[to]);
 }

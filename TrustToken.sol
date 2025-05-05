@@ -34,7 +34,7 @@ contract TrustToken {
 
         balances[from] -= amount;
         balances[to] += amount;
-        reputation[to] += amount;
+        reputation[to] += amount*100;
     }
 
     function getRegisteredUsers() external view returns (address[] memory) {

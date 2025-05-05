@@ -1,0 +1,152 @@
+@startuml
+scale 1.5
+title High-Level Architecture – Trust-Based Review System on Hedera
+
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam linetype ortho
+skinparam defaultTextAlignment center
+skinparam actorStyle awesome
+
+' Using vertical layout directives
+top to bottom direction
+skinparam nodesep 5
+skinparam ranksep 120
+
+skinparam component {
+  BackgroundColor<<Hedera>> #E0F2F1
+  BackgroundColor<<Contract>> #F1F8E9
+  BorderColor Black
+  Margin 15
+  FontSize 10
+}
+
+skinparam ArrowFontSize 10
+skinparam ArrowFontName Arial
+skinparam ArrowFontColor Black
+skinparam ArrowFontStyle plain
+skinparam ArrowThickness 1
+skinparam NoteFontSize 9
+
+actor "User" as U
+
+rectangle "Decentralized Review System (Hedera-Based)" {
+  rectangle "Interface Layer" {
+    component "Frontend / CLI" as CLI
+  }
+     
+  rectangle "                                          Smart Contract Controller                                                 " {
+    component "                                                               Router / dApp Server (Web3 / API Layer)                                                                       " as Router
+  } 
+
+  rectangle "Domain Smart Contracts" {
+    rectangle "Identity & Trust" {
+      component "UserRegistry\nregisterUser()\ntrack reputation" as UR <<Contract>>
+      component "TrustToken\ntransfer()\nburn()" as TT <<Contract>>
+
+      note left of UR
+        Registers users  
+        and tracks their  
+        reputation score  
+        on the platform  
+      end note
+
+      note right of TT
+        TrustTokens are  
+        used to endorse  
+        users or burned  
+        when posting a  
+        review  
+      end note
+    }
+
+    rectangle "Product & Review Logic" {
+      component "ProductFactory\ncreateToken()\nbuyProduct()" as PF <<Contract>>
+      component "ReviewSystem\nsubmitReview()\nvoteReview()" as RS <<Contract>>
+      component "VoteToken\nmint()\nburn()" as VT <<Contract>>
+
+note right of RS
+  Handles all user  
+  reviews and voting  
+  with reputation  
+  adjustment logic  
+end note
+      note left of PF
+        Used by sellers  
+        to create product  
+        tokens; buyers  
+        receive tokens as  
+        ownership proof  
+      end note
+
+      note right of VT
+        Enforces single  
+        vote per review  
+        by minting one  
+        VoteToken which  
+        is burned after  
+        voting  
+      end note
+    }
+  }
+note right of CLI
+  User interface  
+  to register, buy  
+  products, post  
+  reviews, and vote  
+  on content  
+end note
+note right of Router
+  Routes commands  
+  from UI to proper  
+  smart contracts  
+  based on user  
+  intentions  
+end note
+}
+
+' Force alignment with hidden connections
+rectangle "              Infrastructure Layer              " {
+  cloud "                             Hedera Hashgraph                             " as Hedera <<Hedera>>
+}
+
+' === Force vertical alignment ===
+U -[hidden]-> CLI
+CLI -[hidden]-> Router
+Router -[hidden]-> UR
+UR -[hidden]-> Hedera
+
+' === Interaction Arrows ===
+U --> CLI : Commands
+CLI --> Router : Action Requests
+
+Router --> UR : registerUser()
+Router --> TT : transfer(), burn()
+Router --> PF : createToken(), buyProduct()
+Router --> RS : submitReview(), voteReview()
+Router --> VT : mint(), burn()
+
+RS --> UR : updateReputation()
+RS --> PF : checkOwnership()
+RS --> TT : burn()
+RS --> VT : burn()
+
+UR --> Hedera
+TT --> Hedera
+PF --> Hedera
+RS --> Hedera
+VT --> Hedera
+
+' === Notes ===
+
+
+
+note right of Hedera
+  Decentralized  
+  ledger for storing  
+  token data, smart  
+  contract logic,  
+  and review logs  
+end note
+
+@enduml
