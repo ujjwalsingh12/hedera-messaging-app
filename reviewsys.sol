@@ -7,8 +7,9 @@ interface ITrustToken {
 }
 
 interface IVoteToken {
+    function mint(address to, uint256 amount) external;
     function burnFrom(address from, uint256 amount) external;
-    function transferToReviewer(address reviewer, uint256 amount) external;
+    function transferToReviewer(address voter,address reviewer, uint256 amount) external;
 }
 
 interface IUserRegistry {
@@ -38,6 +39,7 @@ contract ReviewSystem {
 
     event ReviewSubmitted(uint256 indexed reviewId, address indexed reviewer, address productToken, string content);
     event ReviewVoted(uint256 indexed reviewId, address indexed voter, bool isUpvote, uint256 newScore);
+    event VoteTokenMinted(address indexed user, uint256 amount);
 
     constructor(address _registry, address _upvoteToken, address _downvoteToken) {
         require(_registry != address(0) && _upvoteToken != address(0) && _downvoteToken != address(0), "Zero address");
@@ -65,32 +67,45 @@ contract ReviewSystem {
     }
 
 function voteOnReview(uint256 reviewId, bool isUpvote) external {
-    require(userRegistry.isRegistered(msg.sender), "Not registered");
-    require(reviewId < reviewCounter, "Invalid review");
-    require(!hasVoted[reviewId][msg.sender], "Already voted");
-    require(msg.sender != reviews[reviewId].reviewer, "Cannot vote on own review");
+    require(reviewId < reviewCounter, "Invalid review ID");
+    require(userRegistry.isRegistered(msg.sender), "User not registered");
+    require(!hasVoted[reviewId][msg.sender], "Already voted on this review");
 
     Review storage r = reviews[reviewId];
-    address reviewer = r.reviewer;
+    require(msg.sender != r.reviewer, "Cannot vote on own review");
 
     uint256 voterRep = userRegistry.reputationScore(msg.sender);
-    uint256 reviewerRep = userRegistry.reputationScore(reviewer);
-    uint256 delta = voterRep / 10;
+    require(voterRep > 0, "Voter has no reputation");
 
+    uint256 reviewerRep = userRegistry.reputationScore(r.reviewer);
+
+    uint256 delta = voterRep / 10;
+    if (delta == 0) {
+        delta = 1; // Optional: ensure at least a small effect if voterRep < 10
+    }
     if (isUpvote) {
         upvoteToken.burnFrom(msg.sender, 1);
-        upvoteToken.transferToReviewer(reviewer, 1);
+        upvoteToken.transferToReviewer(msg.sender,r.reviewer, 1);
         r.upvoteRep += delta;
     } else {
         downvoteToken.burnFrom(msg.sender, 1);
-        downvoteToken.transferToReviewer(reviewer, 1);
+        downvoteToken.transferToReviewer(msg.sender,r.reviewer, 1);
         r.downvoteRep += delta;
     }
 
     r.authenticityScore = reviewerRep + r.upvoteRep - r.downvoteRep;
     hasVoted[reviewId][msg.sender] = true;
 
-    userRegistry.updateReputationOnVote(reviewer, isUpvote, msg.sender);
+    userRegistry.updateReputationOnVote(r.reviewer, isUpvote, msg.sender);
     emit ReviewVoted(reviewId, msg.sender, isUpvote, r.authenticityScore);
 }
+
+
+    // 🔹 New function to mint vote tokens on user request
+    function mintVoteTokens() external {
+        require(userRegistry.isRegistered(msg.sender), "Not registered");
+        upvoteToken.mint(msg.sender, 1);
+        downvoteToken.mint(msg.sender, 1);
+        emit VoteTokenMinted(msg.sender, 1);
+    }
 }

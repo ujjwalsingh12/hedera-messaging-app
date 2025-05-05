@@ -151,6 +151,24 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "transferTrustToken",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "trustToken",
 				"outputs": [
@@ -195,6 +213,12 @@
 						"metadata": "User metadata in JSON format"
 					}
 				},
+				"transferTrustToken(address,uint256)": {
+					"params": {
+						"amount": "The amount of tokens to transfer",
+						"to": "The recipient of the tokens"
+					}
+				},
 				"updateReputationOnVote(address,bool,address)": {
 					"params": {
 						"isUpvote": "True for upvote, false for downvote",
@@ -224,6 +248,9 @@
 				"registerUser(string)": {
 					"notice": "Registers a user and mints TrustTokens"
 				},
+				"transferTrustToken(address,uint256)": {
+					"notice": "Transfer trust tokens from sender to receiver and update reputation accordingly"
+				},
 				"updateReputationOnVote(address,bool,address)": {
 					"notice": "Updates reviewer's reputation after upvote/downvote and burns token externally"
 				}
@@ -249,11 +276,11 @@
 	},
 	"sources": {
 		"userregistry.sol": {
-			"keccak256": "0xf8d6df5c5a5467418b07c48183dab43060d571a79375527e9680ea0fb705e126",
+			"keccak256": "0x9c254623ce86c7a5fe9cb71c1c648761e04aad207bfc13df307a06e345668906",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://526793a098e2165633e216061f24bf30c2053fb151d730d3c34ab9411ae368bb",
-				"dweb:/ipfs/QmSnsgnRH4nCqmbrjKuZ1cgKuy35vK38JyBR1NWEHkCNUz"
+				"bzz-raw://8317daa5a64bed87d0e5e3bf2c4ef41537839c3152fc3381ce039315de9e968a",
+				"dweb:/ipfs/QmYKRvpG1Pf3X92NMhAxExpwdwC1GbNLp1PVyWiP4D5Jv4"
 			]
 		}
 	},

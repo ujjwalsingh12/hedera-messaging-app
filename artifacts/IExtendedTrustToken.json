@@ -49,9 +49,9 @@
 		},
 		"gasEstimates": null,
 		"methodIdentifiers": {
-			"burnFrom(address,uint256)": "79cc6790",
-			"mint(address,uint256)": "40c10f19",
-			"transferToReviewer(address,address,uint256)": "82f50434"
+			"balances(address)": "27e235e3",
+			"mintOnRegistration(address)": "0686ec10",
+			"transfer(address,uint256)": "a9059cbb"
 		}
 	},
 	"abi": [
@@ -59,16 +59,30 @@
 			"inputs": [
 				{
 					"internalType": "address",
-					"name": "from",
+					"name": "user",
 					"type": "address"
-				},
+				}
+			],
+			"name": "balances",
+			"outputs": [
 				{
 					"internalType": "uint256",
-					"name": "amount",
+					"name": "",
 					"type": "uint256"
 				}
 			],
-			"name": "burnFrom",
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "user",
+					"type": "address"
+				}
+			],
+			"name": "mintOnRegistration",
 			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"
@@ -86,30 +100,7 @@
 					"type": "uint256"
 				}
 			],
-			"name": "mint",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "voter",
-					"type": "address"
-				},
-				{
-					"internalType": "address",
-					"name": "reviewer",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "amount",
-					"type": "uint256"
-				}
-			],
-			"name": "transferToReviewer",
+			"name": "transfer",
 			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"

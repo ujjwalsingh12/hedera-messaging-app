@@ -9,16 +9,30 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "from",
+						"name": "user",
 						"type": "address"
-					},
+					}
+				],
+				"name": "balances",
+				"outputs": [
 					{
 						"internalType": "uint256",
-						"name": "amount",
+						"name": "",
 						"type": "uint256"
 					}
 				],
-				"name": "burnFrom",
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"name": "mintOnRegistration",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -36,30 +50,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "mint",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "voter",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "reviewer",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amount",
-						"type": "uint256"
-					}
-				],
-				"name": "transferToReviewer",
+				"name": "transfer",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -73,12 +64,13 @@
 		"userdoc": {
 			"kind": "user",
 			"methods": {},
+			"notice": "Interface extension for token transfer and balance fetch",
 			"version": 1
 		}
 	},
 	"settings": {
 		"compilationTarget": {
-			"reviewsys.sol": "IVoteToken"
+			"userregistry.sol": "IExtendedTrustToken"
 		},
 		"evmVersion": "cancun",
 		"libraries": {},
@@ -92,12 +84,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"reviewsys.sol": {
-			"keccak256": "0xd07ffaaca3828ddc31a28fd8afdfa298ba4ad1ab3a527512b03a21ec54ccb90d",
+		"userregistry.sol": {
+			"keccak256": "0x17938dc738921367661b756206d9af1312e87a0c9a1f63c547ed70d8b2f4e54b",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://985275691e75c9b00e8401412b2c79f959858a292aca28efb324c49f68364348",
-				"dweb:/ipfs/QmZT4NFibc4GJb6qzBwe5iEdTq32f7mybxhHgpkGhCVPAq"
+				"bzz-raw://16b91fc77dba51501f6cd43b8e372c58e2f871897ea269e867f73acee7920a4c",
+				"dweb:/ipfs/QmSW8e7s7CCwK6HB1e9o3j8Z7CTU5Cj7epj7tNtoZRF3dr"
 			]
 		}
 	},

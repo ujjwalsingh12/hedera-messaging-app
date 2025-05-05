@@ -27,12 +27,12 @@ contract TrustToken {
         registeredUsers.push(user);
     }
 
-    function transfer(address to, uint256 amount) external {
-        require(registered[msg.sender] && registered[to], "Both users must be registered");
-        require(msg.sender != to, "Cannot transfer to self");
-        require(balances[msg.sender] >= amount, "Insufficient balance");
+    function transfer(address from, address to, uint256 amount) external {
+        require(registered[from] && registered[to], "Both users must be registered");
+        require(from != to, "Cannot transfer to self");
+        require(balances[from] >= amount, "Insufficient balance");
 
-        balances[msg.sender] -= amount;
+        balances[from] -= amount;
         balances[to] += amount;
         reputation[to] += amount;
     }

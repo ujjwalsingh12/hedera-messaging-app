@@ -4,7 +4,13 @@ pragma solidity ^0.8.0;
 /// @notice Interface for the TrustToken contract
 interface ITrustToken {
     function mintOnRegistration(address user) external;
+     function transfer(address from,address to, uint256 amount) external;
+    function balances(address user) external view returns (uint256);
+    
 }
+
+/// @notice Interface extension for token transfer and balance fetch
+
 
 /// @title UserRegistry
 /// @notice Manages user registration and links to TrustToken minting
@@ -114,4 +120,20 @@ contract UserRegistry {
 
         emit ReputationUpdated(reviewer, reputationScore[reviewer]);
     }
+    /// @notice Transfer trust tokens from sender to receiver and update reputation accordingly
+/// @param to The recipient of the tokens
+/// @param amount The amount of tokens to transfer
+function transferTrustToken(address to, uint256 amount) external {
+    // require(users[msg.sender].exists, "Sender not registered");
+    // require(users[to].exists, "Recipient not registered");
+    // require(msg.sender != to, "Cannot transfer to self");
+    // require(amount > 0, "Amount must be positive");
+
+    trustToken.transfer(msg.sender,to, amount);
+
+    // Increase recipient's reputation based on amount
+    reputationScore[to] += amount;
+
+    emit ReputationUpdated(to, reputationScore[to]);
+}
 }

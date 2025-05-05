@@ -44,8 +44,8 @@ contract VoteToken {
         totalSupply -= amount;
     }
 
-    function transferToReviewer(address to, uint256 amount) external onlyReviewSystem {
+    function transferToReviewer(address from,address to, uint256 amount) external onlyReviewSystem {
+        balanceOf[from] -= amount;
         balanceOf[to] += amount;
-        totalSupply += amount;
     }
 }
