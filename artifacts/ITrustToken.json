@@ -49,11 +49,31 @@
 		},
 		"gasEstimates": null,
 		"methodIdentifiers": {
+			"balances(address)": "27e235e3",
 			"mintOnRegistration(address)": "0686ec10",
-			"reputation(address)": "b9f79451"
+			"transfer(address,address,uint256)": "beabacc8"
 		}
 	},
 	"abi": [
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "user",
+					"type": "address"
+				}
+			],
+			"name": "balances",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
 		{
 			"inputs": [
 				{
@@ -71,19 +91,23 @@
 			"inputs": [
 				{
 					"internalType": "address",
-					"name": "user",
+					"name": "from",
 					"type": "address"
-				}
-			],
-			"name": "reputation",
-			"outputs": [
+				},
+				{
+					"internalType": "address",
+					"name": "to",
+					"type": "address"
+				},
 				{
 					"internalType": "uint256",
-					"name": "",
+					"name": "amount",
 					"type": "uint256"
 				}
 			],
-			"stateMutability": "view",
+			"name": "transfer",
+			"outputs": [],
+			"stateMutability": "nonpayable",
 			"type": "function"
 		}
 	]

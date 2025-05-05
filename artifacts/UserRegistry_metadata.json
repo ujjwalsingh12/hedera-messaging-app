@@ -200,7 +200,13 @@
 					}
 				],
 				"name": "updateReputationOnVote",
-				"outputs": [],
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			}
@@ -276,11 +282,11 @@
 	},
 	"sources": {
 		"userregistry.sol": {
-			"keccak256": "0x9c254623ce86c7a5fe9cb71c1c648761e04aad207bfc13df307a06e345668906",
+			"keccak256": "0xdabd47f000acc2817818775bdabb8489d6452ca40dd56873432945ad70883a25",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://8317daa5a64bed87d0e5e3bf2c4ef41537839c3152fc3381ce039315de9e968a",
-				"dweb:/ipfs/QmYKRvpG1Pf3X92NMhAxExpwdwC1GbNLp1PVyWiP4D5Jv4"
+				"bzz-raw://0b15dd19408e203a7303a1f1adc63a515d6968e034994273095c8965aea3a32c",
+				"dweb:/ipfs/QmRQh7nCEW9gsq4hiYqQF9rFZjqPq6tDQhTdjVpyMQRnND"
 			]
 		}
 	},

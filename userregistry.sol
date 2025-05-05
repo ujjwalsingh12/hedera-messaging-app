@@ -72,7 +72,7 @@ contract UserRegistry {
         trustToken.mintOnRegistration(msg.sender);
 
         // Initialize reputation score
-        reputationScore[msg.sender] = 0;
+        reputationScore[msg.sender] = 100;
 
         emit UserRegistered(msg.sender, metadata);
     }
@@ -101,7 +101,7 @@ contract UserRegistry {
     /// @param reviewer The user who wrote the review
     /// @param isUpvote True for upvote, false for downvote
     /// @param voter The address of the voter
-    function updateReputationOnVote(address reviewer, bool isUpvote, address voter) external {
+    function updateReputationOnVote(address reviewer, bool isUpvote, address voter) external returns (bool) {
         require(users[reviewer].exists, "Reviewer not registered");
         require(users[voter].exists, "Voter not registered");
 
@@ -119,6 +119,7 @@ contract UserRegistry {
         }
 
         emit ReputationUpdated(reviewer, reputationScore[reviewer]);
+        return true;
     }
     /// @notice Transfer trust tokens from sender to receiver and update reputation accordingly
 /// @param to The recipient of the tokens

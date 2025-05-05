@@ -13,9 +13,15 @@
 						"type": "address"
 					}
 				],
-				"name": "mintOnRegistration",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"name": "balances",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -26,15 +32,32 @@
 						"type": "address"
 					}
 				],
-				"name": "reputation",
-				"outputs": [
+				"name": "mintOnRegistration",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
 					{
 						"internalType": "uint256",
-						"name": "",
+						"name": "amount",
 						"type": "uint256"
 					}
 				],
-				"stateMutability": "view",
+				"name": "transfer",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
@@ -46,12 +69,13 @@
 		"userdoc": {
 			"kind": "user",
 			"methods": {},
+			"notice": "Interface for the TrustToken contract",
 			"version": 1
 		}
 	},
 	"settings": {
 		"compilationTarget": {
-			"reviewsys.sol": "ITrustToken"
+			"userregistry.sol": "ITrustToken"
 		},
 		"evmVersion": "cancun",
 		"libraries": {},
@@ -65,12 +89,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"reviewsys.sol": {
-			"keccak256": "0xd07ffaaca3828ddc31a28fd8afdfa298ba4ad1ab3a527512b03a21ec54ccb90d",
+		"userregistry.sol": {
+			"keccak256": "0xdabd47f000acc2817818775bdabb8489d6452ca40dd56873432945ad70883a25",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://985275691e75c9b00e8401412b2c79f959858a292aca28efb324c49f68364348",
-				"dweb:/ipfs/QmZT4NFibc4GJb6qzBwe5iEdTq32f7mybxhHgpkGhCVPAq"
+				"bzz-raw://0b15dd19408e203a7303a1f1adc63a515d6968e034994273095c8965aea3a32c",
+				"dweb:/ipfs/QmRQh7nCEW9gsq4hiYqQF9rFZjqPq6tDQhTdjVpyMQRnND"
 			]
 		}
 	},
